@@ -1,4 +1,4 @@
 package KKSC.page.domain.board.entity;
 
-public class board1 {
+public class Board {
 }

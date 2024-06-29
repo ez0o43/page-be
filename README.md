@@ -8,11 +8,18 @@ Description
 
 ## 개발 환경
 
-PASS
+Gradle - Groovy
+Java 17, Jar
+Spring Boot 3.3.1
 
 ## 사용 기술 스택
 
-PASS
+Java 17
+Spring boot
+Spring Security
+Spring Data JPA
+Mysql
+Thymeleaf
 
 ## 요구사항
 

@@ -1,25 +1,30 @@
 # KKSC homepage 제작 프로젝트
 
-Description
+Spring boot를 사용한 KKSC 동아리 홈페이지 제작 프로젝트
 
 ## 제작 기한
 
-2024-06-27 ~ 
+2024-06 ~ 2024-08
 
 ## 개발 환경
 
-Gradle - Groovy
-Java 17, Jar
-Spring Boot 3.3.1
+- Gradle - Groovy
+- Java 17, Jar
+- Spring Boot 3.3.1
 
 ## 사용 기술 스택
 
-Java 17
-Spring boot
-Spring Security
-Spring Data JPA
-Mysql
-Thymeleaf
+<div align=center>
+  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+  <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
+  <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
+</div>
+<div align=center>
+  <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
+  <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"/>
+  <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+</div>
+  
 
 ## 요구사항
 

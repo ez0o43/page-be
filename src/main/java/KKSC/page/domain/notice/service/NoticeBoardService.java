@@ -9,6 +9,11 @@ import java.util.List;
 
 public interface NoticeBoardService {
 
+    /**
+     *
+     * @param member
+     * @param noticeBoardRequest
+     */
     void create(Member member, NoticeBoardRequest noticeBoardRequest);
 
     void update(Member member, Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);

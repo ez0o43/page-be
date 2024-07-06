@@ -12,7 +12,7 @@ class NoticeBoardServiceTest {
     @Autowired NoticeBoardService noticeBoardService;
 
     @Test
-    void 게시글_작성_실패() throws Exception {
+    void 제목_내용_필수입력검사() throws Exception {
         //given
 
         //when

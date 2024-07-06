@@ -1,8 +1,8 @@
 package KKSC.page.domain.notice.service.impl;
 
 import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.dto.NoticeBoardResponse;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
@@ -51,7 +51,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public List<NoticeBoardResponse> getBoardList() {
+    public List<NoticeBoardListResponse> getBoardList() {
         /*
          * repository Native Query 작성
          */
@@ -69,7 +69,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public List<NoticeBoardResponse> searchBoardList(String cmd) {
+    public List<NoticeBoardListResponse> searchBoardList(String cmd) {
         /*
          * repository Native Query 작성
          * cmd를 기준으로 쿼리 작성

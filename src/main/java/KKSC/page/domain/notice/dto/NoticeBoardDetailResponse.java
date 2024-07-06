@@ -2,12 +2,13 @@ package KKSC.page.domain.notice.dto;
 
 import java.time.LocalDateTime;
 
-public record NoticeBoardResponse(
+public record NoticeBoardDetailResponse(
         String title,
         String content,
+        String createdBy,
         Long view,
-        Long fixed,
         Long delYN,
+        Long fileId,
+        String fileName,
         LocalDateTime createdAt,
-        LocalDateTime modifiedAt) {
-}
+        LocalDateTime modifiedAt) {}

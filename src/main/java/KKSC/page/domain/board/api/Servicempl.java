@@ -1,4 +1,4 @@
 package KKSC.page.domain.board.api;
 
-public class BoardApi {
+public class Servicempl {
 }

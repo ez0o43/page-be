@@ -14,10 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeFileController {
-    
-    @Autowired
+
     NoticeFileService noticeFileService;
-    
 
     // 공지사항 첨부파일 업로드
     @PostMapping("/{noticeboardid}")

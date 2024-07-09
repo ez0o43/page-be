@@ -3,13 +3,12 @@ package KKSC.page.domain.notice.service;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.entity.NoticeBoard;
 
 import java.util.List;
 
 public interface NoticeBoardService {
 
-    NoticeBoard create(NoticeBoardRequest noticeBoardRequest);
+    void create(NoticeBoardRequest noticeBoardRequest);
 
     void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
 

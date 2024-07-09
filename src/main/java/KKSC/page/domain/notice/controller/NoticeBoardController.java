@@ -34,11 +34,16 @@ public class NoticeBoardController {
         return ResponseEntity.ok().body(detailResponse);
     }
 
+    @GetMapping("/notices")
+    public ResponseEntity<NoticeBoardListResponse> noticeList() {
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
     // 게시글 작성
     @PostMapping("/notice")
     public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request){
-        NoticeBoard noticeBoard = noticeBoardService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(noticeBoard);
+        noticeBoardService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("OK");
     }
 
     // 게시글 수정
@@ -54,4 +59,5 @@ public class NoticeBoardController {
         noticeBoardService.delete(id);
         return ResponseEntity.ok().build();
     }
+
 }

@@ -5,6 +5,8 @@ import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -18,7 +20,11 @@ public class NoticeBoard extends BaseTimeEntity {
 
 //    private Member member;
 
-//    private File file;
+    @OneToMany(mappedBy = "noticeBoard")
+    private List<NoticeFile> noticeFiles;
+
+    @Enumerated(EnumType.STRING)
+    private Keyword keyword; /* (제목, 내용, 작성자)로 검색 */
 
     private String title;
     private String content;
@@ -33,5 +39,6 @@ public class NoticeBoard extends BaseTimeEntity {
         this.title = noticeBoardRequest.title();
         this.content = noticeBoardRequest.content();
         this.fixed = noticeBoardRequest.fixed();
+        updateModifitedAt();
     }
 }

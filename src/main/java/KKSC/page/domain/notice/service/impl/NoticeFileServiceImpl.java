@@ -2,22 +2,23 @@ package KKSC.page.domain.notice.service.impl;
 
 import java.nio.file.Paths;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import KKSC.page.domain.notice.service.NoticeFileService;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Service
+@RequiredArgsConstructor
 public class NoticeFileServiceImpl implements NoticeFileService {
-
     
-    @Autowired
-    ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
-    @Autowired
-    HttpServletResponse response;
+    private final HttpServletResponse response;
 
     // 업로드 경로 지정 
     private final String uploadPath = Paths.get("C:", "develop", "upload-files").toString();
@@ -27,7 +28,6 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 	 * @param noticeBoardId : 파일업로드 하고자 하는 공지사항 게시물의 번호
 	 * @return 미정
      * @since 2024.07.06     
-     * @version 0.01
 	 */
     @Override
     public String uploadFile(MultipartHttpServletRequest multipartHttpServletRequest, int noticeBoardId) {
@@ -42,7 +42,6 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 	 * @param noticeFileId : 다운로드 하고자 하는 파일의 번호
 	 * @return 미정
      * @since 2024.07.06
-     * @version 0.01
 	 */
     @Override
     public String downloadFile(Integer noticeFileId) {
@@ -57,7 +56,6 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 	 * @param noticeFileId : 삭제 하고자 하는 파일의 번호
 	 * @return 미정
      * @since 2024.07.06
-     * @version 0.01
 	 */
     @Override
     public String deleteFile(Integer noticeFileId) {
@@ -66,6 +64,4 @@ public class NoticeFileServiceImpl implements NoticeFileService {
          */
         return null;
     }
-
-
 }

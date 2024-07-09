@@ -3,7 +3,6 @@ package KKSC.page.domain.notice.service.impl;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +18,19 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     private final NoticeBoardRepository noticeBoardRepository;
 
     @Override
-    public NoticeBoard create(NoticeBoardRequest noticeBoardRequest) {
+    public void create(NoticeBoardRequest noticeBoardRequest) {
         /*
          * 사용자에게 공지사항 게시판을 작성할 권한이 있는지 확인
          * noticeBoardRequest 를 통해 noticeBoard 객체 생성
          * noticeBoardRepository 에 저장
          * 성공적으로 저장되었다면 200 OK
          */
-        return noticeBoardRepository.save(noticeBoardRequest.toEntity());
+        noticeBoardRepository.save(noticeBoardRequest.toEntity());
     }
 
     @Override
     public void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest) {
         /*
-         * 사용자에게 수정할 권한이 있는지 확인
          * noticeBoardRepository에서 noticeBoardId로 기존 수정할 게시글 가져오기
          * noticeBoardRequest 내용으로 수정
          * 성공적으로 수정되었다면 NoticeBoardResponse에 수정한 내용 담아서 반환

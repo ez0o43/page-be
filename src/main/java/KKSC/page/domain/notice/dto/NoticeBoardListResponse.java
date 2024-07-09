@@ -8,6 +8,8 @@ public record NoticeBoardListResponse (
         String title,
 //        String name,
 //        Long fileYN,
+        String createdBy,
+        Long fileYN,
         Long view,
         Long delYN,
         LocalDateTime createdAt

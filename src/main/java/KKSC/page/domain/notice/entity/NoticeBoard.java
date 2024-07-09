@@ -1,12 +1,9 @@
 package KKSC.page.domain.notice.entity;
 
-import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -34,12 +31,14 @@ public class NoticeBoard extends BaseTimeEntity {
 
     private Long view; /* 조회수 */
     private Long fixed; /* 상단 고정 여부 */
+
+    @Setter
     private Long delYN; /* 삭제 여부 */
 
-    /* 게시글 수정 메서드 */
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
+    public void update(NoticeBoardRequest noticeBoardRequest) {
+        this.title = noticeBoardRequest.title();
+        this.content = noticeBoardRequest.content();
+        this.fixed = noticeBoardRequest.fixed();
         updateModifitedAt();
     }
 }

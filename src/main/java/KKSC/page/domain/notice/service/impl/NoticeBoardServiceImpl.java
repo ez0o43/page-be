@@ -1,9 +1,8 @@
 package KKSC.page.domain.notice.service.impl;
 
-import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public NoticeBoard getBoardDetail(Long noticeBoardId) {
+    public NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId) {
         /*
          * repository Native Query 작성
          * noticeBoardId의 글을 repo에서 가져와서 response에 담아서 반환

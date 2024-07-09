@@ -1,12 +1,9 @@
 package KKSC.page.domain.notice.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import KKSC.page.global.common.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,20 +17,19 @@ public class NoticeFile extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 사용자가 보는 파일명
-    private String name; 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_board_id")
+    private NoticeBoard noticeBoard;
 
-    // 서버에 해당 파일 주소
-    private String baseURL;
+    private String name; /* 사용자가 보는 파일명 */
 
-    // 해당 파일 용량
-    private Long fileSize;
+    private String baseURL; /* 서버에 해당 파일 주소 */
 
-    // 해당 파일 타입 
-    private String type; 
+    private Long fileSize; /* 해당 파일 용량 */
 
-    // 다운로드 횟수 default 0 
+    private String type; /* 해당 파일 타입 */
+
     @ColumnDefault("=0")
-    private Long downloadCnt;
+    private Long downloadCnt; /* 다운로드 횟수 default 0 */
     
 }

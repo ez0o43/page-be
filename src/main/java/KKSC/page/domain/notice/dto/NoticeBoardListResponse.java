@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record NoticeBoardListResponse (
         String title,
-        String name,
+        String createdBy,
         Long fileYN,
         Long view,
         Long delYN,

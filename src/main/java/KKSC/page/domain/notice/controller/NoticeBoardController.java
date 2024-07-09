@@ -19,6 +19,8 @@ public class NoticeBoardController {
 
     @GetMapping("/notice")
     public ResponseEntity<NoticeBoardDetailResponse> notice() {
+        noticeBoardService.getBoardList();
+
         NoticeBoardDetailResponse response = new NoticeBoardDetailResponse("Hello", "Spring",
                 "admin", 1L, 0L, null, null, LocalDateTime.now(), LocalDateTime.now());
 
@@ -26,7 +28,7 @@ public class NoticeBoardController {
     }
 
     @GetMapping("/notices")
-    public ResponseEntity<NoticeBoardListResponse> noticeList(){
+    public ResponseEntity<NoticeBoardListResponse> noticeList() {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
@@ -44,4 +46,5 @@ public class NoticeBoardController {
     public ResponseEntity<NoticeBoard> noticeDelete(@PathVariable Long id) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

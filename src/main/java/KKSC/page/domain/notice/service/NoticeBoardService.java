@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface NoticeBoardService {
 
-    void create(Member member, NoticeBoardRequest noticeBoardRequest);
+    void create(NoticeBoardRequest noticeBoardRequest);
 
-    void update(Member member, Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
+    void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
 
-    void delete(Member member, Long noticeBoardId);
+    void delete(Long noticeBoardId);
 
     List<NoticeBoardListResponse> getBoardList(); /* 기본적으로 보여줄 게시글 목록 */
 

@@ -18,5 +18,5 @@ public interface NoticeBoardService {
 
     NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId); /* 글 선택 시 보여줄 상세 글 */
 
-    List<NoticeBoardListResponse> searchBoardList(String cmd); /* 작성일 순, 작성자가 포함된 글 불러오기 */
+    List<NoticeBoardListResponse> searchBoardList(String query, String keyword); /* 작성일 순, 작성자가 포함된 글 불러오기 */
 }

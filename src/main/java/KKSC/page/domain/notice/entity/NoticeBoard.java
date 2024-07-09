@@ -24,21 +24,22 @@ public class NoticeBoard extends BaseTimeEntity {
     private List<NoticeFile> noticeFiles;
 
     @Enumerated(EnumType.STRING)
-    private Keyword keyword; /* (제목, 내용, 작성자)로 검색 */
+    private Keyword keyword; /* (제목, 내용, 작성자)로 검색. default 제목 */
 
     private String title;
     private String content;
 
     private Long view; /* 조회수 */
     private Long fixed; /* 상단 고정 여부 */
-
-    @Setter
     private Long delYN; /* 삭제 여부 */
 
     public void update(NoticeBoardRequest noticeBoardRequest) {
         this.title = noticeBoardRequest.title();
         this.content = noticeBoardRequest.content();
         this.fixed = noticeBoardRequest.fixed();
-        updateModifitedAt();
+    }
+
+    public void delete() {
+        this.delYN = 1L;
     }
 }

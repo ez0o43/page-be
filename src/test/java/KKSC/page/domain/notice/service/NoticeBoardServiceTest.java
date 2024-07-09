@@ -16,6 +16,20 @@ class NoticeBoardServiceTest {
     @Autowired
     NoticeBoardService noticeBoardService;
 
+    @Test
+    void 생성_성공() throws Exception {
+        //given
+        NoticeBoardRequest request = new NoticeBoardRequest("title", "content", 0L);
+
+        //when
+        noticeBoardService.create(request);
+        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
+        System.out.println(board.toString());
+
+        //then
+        assertEquals("title", board.title());
+    }
+
     /* 게시물 작성 테스트 케이스 */
     @Test
     void 제목_내용_필수입력_실패() throws Exception {

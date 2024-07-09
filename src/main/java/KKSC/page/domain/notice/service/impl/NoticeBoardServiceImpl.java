@@ -18,9 +18,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     private final NoticeBoardRepository noticeBoardRepository;
 
     @Override
-    public void create(Member member, NoticeBoardRequest noticeBoardRequest) {
+    public void create(NoticeBoardRequest noticeBoardRequest) {
         /*
-         * 사용자에게 공지사항 게시판을 작성할 권한이 있는지 확인
          * noticeBoardReqeust를 통해 noticeBoard 객체 생성
          * noticeBoardrepository에 저장
          * 성공적으로 저장되었다면 200 OK
@@ -28,9 +27,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public void update(Member member, Long noticeBoardId, NoticeBoardRequest noticeBoardRequest) {
+    public void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest) {
         /*
-         * 사용자에게 수정할 권한이 있는지 확인
          * noticeBoardRepository에서 noticeBoardId로 기존 수정할 게시글 가져오기
          * noticeBoardRequest의 내용으로 수정
          * 성공적으로 수정되었다면 NoticeBoardResponse에 수정한 내용 담아서 반환
@@ -42,9 +40,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public void delete(Member member, Long noticeBoardId) {
+    public void delete(Long noticeBoardId) {
         /*
-         * 사용자에게 삭제할 권한이 있는지 확인
          * 삭제할 noticeBoardId를 repository에서 찾아옴
          * del_YN의 여부를 바꾼 뒤 200 OK 반환
          */

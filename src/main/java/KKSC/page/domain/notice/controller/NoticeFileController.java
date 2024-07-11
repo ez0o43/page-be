@@ -15,28 +15,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NoticeFileController {
 
-    NoticeFileService noticeFileService;
+    private final NoticeFileService noticeFileService;
 
     // 공지사항 첨부파일 업로드
     @PostMapping("/{noticeboardid}")
     public ResponseEntity<Object> NoticeFileupload(MultipartHttpServletRequest multipartHttpServletRequest,
-            @PathVariable Integer noticeboardid) throws Exception {
+                                                   @PathVariable Long noticeboardid) throws Exception {
 
         return ResponseEntity.ok().body(noticeFileService.uploadFile(multipartHttpServletRequest, noticeboardid));
     }
 
     // 공지사항 첨부파일 다운로드
     @GetMapping("/{noticeFileId}")
-    public ResponseEntity<Object> NoticeFileDownload(@PathVariable Integer noticeFileId) throws Exception {
+    public ResponseEntity<Object> NoticeFileDownload(@PathVariable Long noticeFileId) throws Exception {
 
-        return ResponseEntity.ok().body(noticeFileService.downloadFile(noticeFileId));
+        return noticeFileService.downloadFile(noticeFileId);
     }
 
     // 공지사항 첨부파일 삭제
     @DeleteMapping("/{noticeFileId}")
-    public ResponseEntity<Object>  NoticeFileDelete(@PathVariable Integer noticeFileId) throws Exception {
+    public ResponseEntity<Object>  NoticeFileDelete(@PathVariable Long noticeFileId) throws Exception {
 
-    return ResponseEntity.ok().body(noticeFileService.deleteFile(noticeFileId));
+        return ResponseEntity.ok().body(noticeFileService.deleteFile(noticeFileId));
     }
 
 

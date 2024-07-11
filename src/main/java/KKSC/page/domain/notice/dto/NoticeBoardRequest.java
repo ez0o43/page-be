@@ -14,7 +14,7 @@ public record NoticeBoardRequest(
         return NoticeBoard.builder()
                 .title(title()).content(content()).fixed(fixed())
                 .keyword(Keyword.TITLE).delYN(0L).view(0L)
-                .noticeFiles(new ArrayList<>())
+//                .noticeFiles(new ArrayList<>())
                 .build();
     }
 }

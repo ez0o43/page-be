@@ -23,8 +23,8 @@ public class NoticeBoard extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "noticeBoard")
-    private List<NoticeFile> noticeFiles;
+//    @OneToMany(mappedBy = "noticeBoard")
+//    private List<NoticeFile> noticeFiles;
 
     @Enumerated(EnumType.STRING)
     private Keyword keyword; /* (제목, 내용, 작성자)로 검색. default 제목 */

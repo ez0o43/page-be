@@ -38,7 +38,7 @@ public class NoticeBoardController {
     @PostMapping("/notice")
     public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request){
         noticeBoardService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 게시글 수정

@@ -43,7 +43,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 
     private final NoticeFileRepository noticeFileRepository;
 
-    // 업로드 경로 지정
+    // 업로드 경로 지정 (경로 수정 예정)
     private final String uploadPath = Paths.get("/Users/ijunhyeong/KKSC-2/page/src/main/resources/filetest").toString();
 
     /**

@@ -1,8 +1,7 @@
 package KKSC.page.domain.notice.dto;
 
-import KKSC.page.domain.notice.entity.NoticeBoard;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record NoticeBoardDetailResponse(
         String title,
@@ -10,8 +9,7 @@ public record NoticeBoardDetailResponse(
         String createdBy,
         Long view,
         Long delYN,
-        Long fileId,
-        String fileName,
+        List<NoticeFileResponse> fileResponses,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {}

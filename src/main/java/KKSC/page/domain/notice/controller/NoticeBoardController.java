@@ -4,6 +4,7 @@ import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.entity.NoticeBoard;
+import KKSC.page.domain.notice.exeption.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("/notice")
 @RequiredArgsConstructor
 public class NoticeBoardController {
 
@@ -20,9 +21,9 @@ public class NoticeBoardController {
 
     // 게시글 목록 조회
     @GetMapping("/notices")
-    public ResponseEntity<List<NoticeBoardListResponse>> noticeList(){
+    public ResponseVO<List<NoticeBoardListResponse>> noticeList(){
         List<NoticeBoardListResponse> listResponse = noticeBoardService.getBoardList();
-        return ResponseEntity.ok().body(listResponse);
+        return null;
     }
 
     // 게시글 조회
@@ -36,7 +37,7 @@ public class NoticeBoardController {
 
     // 게시글 작성
     @PostMapping("/notice")
-    public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request){
+    public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request) {
         noticeBoardService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -45,12 +46,12 @@ public class NoticeBoardController {
     @PutMapping("/notice/{id}")
     public ResponseEntity<NoticeBoard> noticeUpdate(@PathVariable Long id,@RequestBody NoticeBoardRequest request){
         noticeBoardService.update(id, request);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     // 게시글 삭제
     @DeleteMapping("/notice/{id}")
-    public ResponseEntity<NoticeBoard> noticeDelete(@PathVariable Long id) {
+    public ResponseEntity<Void> noticeDelete(@PathVariable Long id) {
         noticeBoardService.delete(id);
         return ResponseEntity.ok().build();
     }

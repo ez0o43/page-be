@@ -119,4 +119,12 @@ class NoticeBoardServiceTest {
     }
 
     // 조회수 증가 테스트코드 작성하기
+    @Test
+    void 조회수_증가_검증() throws Exception {
+        //given
+
+        //when
+
+        //then
+    }
 }

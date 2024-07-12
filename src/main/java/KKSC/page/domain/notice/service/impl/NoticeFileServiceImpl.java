@@ -45,9 +45,10 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 
     private final NoticeFileRepository noticeFileRepository;
 
-    // 업로드 경로 지정 (경로 수정 예정)
-    private final String uploadPath = Paths.get("/Users/ijunhyeong/KKSC-2/page/src/main/resources/filetest").toString();
-
+    // 업로드 경로 지정 (경로 수정 예정 / 경로 수정 해야 테스트 가능 / 환경변수에 넣을 예정 )
+    // 절대 경로
+    private final String uploadPath = Paths.get("/Users/ijunhyeong/kkscve/page-be/src/main/resources/noticefile").toString();
+    private final Path directoryPath = Paths.get("src", "main", "resources","noticefile");
     /**
      * 공지사항 파일 업로드
      * @param noticeBoardId : 파일업로드 하고자 하는 공지사항 게시물의 번호
@@ -61,8 +62,13 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     public String uploadFile(MultipartHttpServletRequest multipartHttpServletRequest, Long noticeBoardId) throws Exception, IOException {
         /*
          * 경로,파일명,파일사이즈,파일타입 빌더패턴으로 묶어서 정보 DB에 저장 후 서버에 파일 업로드
+         * 
          */
-        
+        File Folder = new File(uploadPath.toString());
+        // 폴더없을경우 생성 
+        if (!Folder.exists()) {
+            Folder.mkdir(); // 디렉터리 생성.
+        }
         // 총 업로드 요청한 파일 갯수
         int total = 0;
         // 업로드 된 파일 갯수
@@ -89,7 +95,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
                         String completeuploadPath = uploadPath + "/" + noticeFileNameUuid;
                         // DB에 저장
                         NoticeFile noticeFile = NoticeFile.builder()
-                                .noticeFileNmaeUuid(noticeFileNameUuid)
+                                .noticeFileNameUuid(noticeFileNameUuid)
                                 .noticeFileBaseUrl(completeuploadPath)
                                 .noticeFileName(multipartFile.getOriginalFilename())
                                 .noticeFileType(multipartFile.getContentType())

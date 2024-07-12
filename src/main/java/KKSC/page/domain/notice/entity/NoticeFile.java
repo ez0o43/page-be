@@ -37,9 +37,9 @@ public class NoticeFile extends BaseTimeEntity {
     private int noticeFileDownloadCnt;
 
     @Builder
-    public NoticeFile ( String noticeFileNmaeUuid,String noticeFileName, String noticeFileBaseUrl, 
+    public NoticeFile ( String noticeFileNameUuid,String noticeFileName, String noticeFileBaseUrl, 
     Long noticeFileSize,String noticeFileType ) {
-        this.noticeFileNameUuid = 
+        this.noticeFileNameUuid = noticeFileNameUuid;
         this.noticeFileName = noticeFileName;
         this.noticeFileBaseUrl = noticeFileBaseUrl;
         this.noticeFileSize = noticeFileSize;

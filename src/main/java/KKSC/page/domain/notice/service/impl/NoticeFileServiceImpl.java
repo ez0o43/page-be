@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,7 +16,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.core.io.Resource;
-
 
 import KKSC.page.domain.notice.entity.NoticeFile;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;
@@ -35,7 +33,6 @@ import java.net.URLEncoder;
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeFileServiceImpl implements NoticeFileService {
-
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -117,8 +114,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         }
 
         return Integer.toString(total) + " 중 " + Integer.toString(cnt) + " 성공 ";
-    };
-
+    }
 
     /**
      * 공지사항 파일 다운로드
@@ -178,5 +174,4 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         }
         return null;
     }
-
 }

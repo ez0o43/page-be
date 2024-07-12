@@ -1,6 +1,5 @@
 package KKSC.page.domain.notice.entity;
 
-
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,12 @@ public class NoticeFile extends BaseTimeEntity {
 
     // 파일명 고유번호
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long noticeFileid;
+    @Column(name = "notice_file_id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "notice_board_id")
+    private NoticeBoard noticeBoard;
 
     private String noticeFileNameUuid;
 
@@ -37,14 +41,12 @@ public class NoticeFile extends BaseTimeEntity {
     private int noticeFileDownloadCnt;
 
     @Builder
-    public NoticeFile ( String noticeFileNameUuid,String noticeFileName, String noticeFileBaseUrl, 
-    Long noticeFileSize,String noticeFileType ) {
+    public NoticeFile (String noticeFileNameUuid,String noticeFileName, String noticeFileBaseUrl,
+    Long noticeFileSize,String noticeFileType) {
         this.noticeFileNameUuid = noticeFileNameUuid;
         this.noticeFileName = noticeFileName;
         this.noticeFileBaseUrl = noticeFileBaseUrl;
         this.noticeFileSize = noticeFileSize;
         this.noticeFileType = noticeFileType;
     }
-
-    
 }

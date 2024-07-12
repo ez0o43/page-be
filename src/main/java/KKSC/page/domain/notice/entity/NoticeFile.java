@@ -1,5 +1,6 @@
 package KKSC.page.domain.notice.entity;
 
+
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,30 +12,39 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class NoticeFile extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     // 파일명 고유번호
-    private String nameUuid;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long noticeFileid;
+
+    private String noticeFileNameUuid;
 
     // 사용자가 보는 파일명
-    private String name;
+    private String noticeFileName;
 
     // 서버에 해당 파일 주소
-    private String baseUrl;
+    private String noticeFileBaseUrl;
 
     // 해당 파일 용량
-    private Long fileSize;
+    private Long noticeFileSize;
 
     // 해당 파일 타입
-    private String fileType;
+    private String noticeFileType;
 
     // 다운로드 횟수 default 0
     @Column(columnDefinition = "integer default 0")
-    private int downloadCnt;
+    private int noticeFileDownloadCnt;
 
-    /* UUid 생성 메서드 추가 */
+    @Builder
+    public NoticeFile ( String noticeFileNameUuid,String noticeFileName, String noticeFileBaseUrl, 
+    Long noticeFileSize,String noticeFileType ) {
+        this.noticeFileNameUuid = noticeFileNameUuid;
+        this.noticeFileName = noticeFileName;
+        this.noticeFileBaseUrl = noticeFileBaseUrl;
+        this.noticeFileSize = noticeFileSize;
+        this.noticeFileType = noticeFileType;
+    }
+
+    
 }

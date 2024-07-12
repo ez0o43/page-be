@@ -20,7 +20,7 @@ public class NoticeBoardController {
     private final NoticeBoardService noticeBoardService;
 
     // 게시글 목록 조회
-    @GetMapping("/notices")
+    @GetMapping("/list")
     public ResponseVO<List<NoticeBoardListResponse>> noticeList(){
         List<NoticeBoardListResponse> listResponse = noticeBoardService.getBoardList();
         return null;
@@ -36,21 +36,21 @@ public class NoticeBoardController {
     }
 
     // 게시글 작성
-    @PostMapping("/notice")
+    @PostMapping("/")
     public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request) {
-        noticeBoardService.create(request);
+        noticeBoardService.create(request, null);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 게시글 수정
-    @PutMapping("/notice/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NoticeBoard> noticeUpdate(@PathVariable Long id,@RequestBody NoticeBoardRequest request){
         noticeBoardService.update(id, request);
         return ResponseEntity.ok().build();
     }
 
     // 게시글 삭제
-    @DeleteMapping("/notice/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> noticeDelete(@PathVariable Long id) {
         noticeBoardService.delete(id);
         return ResponseEntity.ok().build();

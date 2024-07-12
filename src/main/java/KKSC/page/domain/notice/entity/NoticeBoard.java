@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(of = {"id", "title", "content"})
 public class NoticeBoard extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +23,10 @@ public class NoticeBoard extends BaseTimeEntity {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "member_id")
 //    private Member member;
+    private String memberName;
 
-//    @OneToMany(mappedBy = "noticeBoard")
-//    private List<NoticeFile> noticeFiles;
+    @OneToMany(mappedBy = "noticeBoard")
+    private List<NoticeFile> noticeFiles;
 
     @Enumerated(EnumType.STRING)
     private Keyword keyword; /* (제목, 내용, 작성자)로 검색. default 제목 */

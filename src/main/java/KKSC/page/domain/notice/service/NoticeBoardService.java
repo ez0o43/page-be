@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NoticeBoardService {
 
-    void create(NoticeBoardRequest noticeBoardRequest);
+    void create(NoticeBoardRequest noticeBoardRequest, String memberName);
 
     void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
 

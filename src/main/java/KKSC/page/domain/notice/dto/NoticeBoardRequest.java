@@ -10,11 +10,12 @@ public record NoticeBoardRequest(
         String content,
         Long fixed) {
 
-    public NoticeBoard toEntity() {
+    public NoticeBoard toEntity(String memberName) {
         return NoticeBoard.builder()
                 .title(title()).content(content()).fixed(fixed())
-                .keyword(Keyword.TITLE).delYN(0L).view(0L)
-//                .noticeFiles(new ArrayList<>())
+                .keyword(Keyword.TITLE).delYN(0L)
+                .view(0L).memberName(memberName)
+                .noticeFiles(new ArrayList<>())
                 .build();
     }
 }

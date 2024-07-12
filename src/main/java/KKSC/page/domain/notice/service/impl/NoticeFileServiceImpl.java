@@ -127,11 +127,15 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         String path = noticeFile.get().getNoticeFileBaseUrl();
 
         try {
+            // 파일 경로 지정
             Path filePath = Paths.get(noticeFile.get().getNoticeFileBaseUrl());
+            // 파일 불러오기 
             Resource resource = new InputStreamResource(Files.newInputStream(filePath)); // 파일 resource 얻기
             File file = new File(path);
 
+            // 파일 이름 지정
             String filename = URLEncoder.encode(noticeFile.get().getNoticeFileName(), "UTF-8");
+            // 헤더 설정
             response.setHeader("Content-Disposition", "attachment; fileName=\"" + filename + "\"");
 
             return new ResponseEntity<Object>(resource, HttpStatus.OK);
@@ -153,9 +157,12 @@ public class NoticeFileServiceImpl implements NoticeFileService {
          * 파일아이디로 DB에서 파일 경로 찾아서 삭제 후 DB에서도 해당 데이터 삭제
          */
         Optional<NoticeFile> noticeFile = noticeFileRepository.findById(noticeFileId);
+        // 파일 지정
         File file = new File(noticeFile.get().getNoticeFileBaseUrl());
         if( file.exists() ){
+            // file 삭제 
             if(file.delete()){
+                // DB 데이터 삭제 
                 noticeFileRepository.deleteById(noticeFileId);
             }else{
                 log.info("error");

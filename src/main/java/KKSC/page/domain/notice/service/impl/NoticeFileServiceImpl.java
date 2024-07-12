@@ -4,6 +4,8 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -60,10 +62,12 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         /*
          * 경로,파일명,파일사이즈,파일타입 빌더패턴으로 묶어서 정보 DB에 저장 후 서버에 파일 업로드
          */
-
+        
+        // 총 업로드 요청한 파일 갯수
         int total = 0;
+        // 업로드 된 파일 갯수
         int cnt = 0;
-        log.info(uploadPath, multipartHttpServletRequest);
+
         // 전체 NULL 체크
         if (!ObjectUtils.isEmpty(multipartHttpServletRequest)) {
 
@@ -73,23 +77,29 @@ public class NoticeFileServiceImpl implements NoticeFileService {
             while (iterator.hasNext()) {
                 total++;
                 name = iterator.next();
+                
                 List<MultipartFile> list = multipartHttpServletRequest.getFiles(name);
                 for (MultipartFile multipartFile : list) {
 
                     if (!(multipartFile.getOriginalFilename() == null
                             || multipartFile.getOriginalFilename().isEmpty())) {
-                        String completeuploadPath = uploadPath + "/" + multipartFile.getOriginalFilename();
-                        log.info(completeuploadPath);
+                        // File명 uuid 생성
+                        String noticeFileNameUuid = multipartFile.getOriginalFilename()+UUID.randomUUID().toString();
+                        // File Baseurl 설정 
+                        String completeuploadPath = uploadPath + "/" + noticeFileNameUuid;
+                        // DB에 저장
                         NoticeFile noticeFile = NoticeFile.builder()
-                                .baseUrl(completeuploadPath)
-                                .name(name)
-                                .filetype(multipartFile.getContentType())
-                                .fileSize(multipartFile.getSize())
+                                .noticeFileNmaeUuid(noticeFileNameUuid)
+                                .noticeFileBaseUrl(completeuploadPath)
+                                .noticeFileName(multipartFile.getOriginalFilename())
+                                .noticeFileType(multipartFile.getContentType())
+                                .noticeFileSize(multipartFile.getSize())
                                 .build();
 
-                        log.info(noticeFile.getBaseUrl());
                         noticeFileRepository.save(noticeFile);
+                        
                         cnt++;
+                        // 실제 파일 업로드 
                         File uploadFile = new File(completeuploadPath);
                         multipartFile.transferTo(uploadFile);
                     } else
@@ -114,14 +124,14 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     @Override
     public ResponseEntity<Object> downloadFile(Long noticeFileId) {
         Optional<NoticeFile> noticeFile = noticeFileRepository.findById(noticeFileId);
-        String path = noticeFile.get().getBaseUrl();
+        String path = noticeFile.get().getNoticeFileBaseUrl();
 
         try {
-            Path filePath = Paths.get(noticeFile.get().getBaseUrl());
+            Path filePath = Paths.get(noticeFile.get().getNoticeFileBaseUrl());
             Resource resource = new InputStreamResource(Files.newInputStream(filePath)); // 파일 resource 얻기
             File file = new File(path);
 
-            String filename = URLEncoder.encode(file.getName(), "UTF-8");
+            String filename = URLEncoder.encode(noticeFile.get().getNoticeFileName(), "UTF-8");
             response.setHeader("Content-Disposition", "attachment; fileName=\"" + filename + "\"");
 
             return new ResponseEntity<Object>(resource, HttpStatus.OK);
@@ -143,7 +153,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
          * 파일아이디로 DB에서 파일 경로 찾아서 삭제 후 DB에서도 해당 데이터 삭제
          */
         Optional<NoticeFile> noticeFile = noticeFileRepository.findById(noticeFileId);
-        File file = new File(noticeFile.get().getBaseUrl());
+        File file = new File(noticeFile.get().getNoticeFileBaseUrl());
         if( file.exists() ){
             if(file.delete()){
                 noticeFileRepository.deleteById(noticeFileId);
@@ -155,4 +165,5 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         }
         return null;
     }
+
 }

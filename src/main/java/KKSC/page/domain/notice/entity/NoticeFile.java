@@ -1,6 +1,5 @@
 package KKSC.page.domain.notice.entity;
 
-import java.util.UUID;
 
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;

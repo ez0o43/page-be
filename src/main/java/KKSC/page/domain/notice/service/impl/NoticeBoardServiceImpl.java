@@ -24,8 +24,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * noticeBoardRepository 에 저장
      */
     @Override
-    public void create(NoticeBoardRequest noticeBoardRequest) {
-        NoticeBoard noticeBoard = noticeBoardRequest.toEntity();
+    public void create(NoticeBoardRequest noticeBoardRequest, String memberName) {
+        NoticeBoard noticeBoard = noticeBoardRequest.toEntity(memberName);
 
         noticeBoardRepository.save(noticeBoard);
     }

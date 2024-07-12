@@ -1,5 +1,7 @@
 package KKSC.page.domain.notice.service;
 
+import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import org.junit.jupiter.api.Test;
@@ -13,21 +15,23 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class NoticeBoardServiceTest {
 
-    @Autowired
-    NoticeBoardService noticeBoardService;
+    @Autowired NoticeBoardService noticeBoardService;
+    @Autowired MemberRepository memberRepository;
 
     @Test
     void 생성_성공() throws Exception {
         //given
         NoticeBoardRequest request = new NoticeBoardRequest("title", "content", 0L);
+        Member member = Member.builder().username("Kim").build();
 
         //when
-        noticeBoardService.create(request);
+        memberRepository.save(member);
+        noticeBoardService.create(request, member.getUsername());
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
-        System.out.println(board.toString());
+        System.out.println(board);
 
         //then
-        assertEquals("title", board.title());
+        assertEquals("title", board.getTitle());
     }
 
     /* 게시물 작성 테스트 케이스 */
@@ -38,8 +42,8 @@ class NoticeBoardServiceTest {
         NoticeBoardRequest noneContent = new NoticeBoardRequest("title", null, 0L);
 
         //when, then
-        assertThrows(Exception.class, () -> noticeBoardService.create(noneTitle));
-        assertThrows(Exception.class, () -> noticeBoardService.create(noneContent));
+        assertThrows(Exception.class, () -> noticeBoardService.create(noneTitle, "Kim"));
+        assertThrows(Exception.class, () -> noticeBoardService.create(noneContent, "Kim"));
     }
 
     @Test
@@ -49,7 +53,7 @@ class NoticeBoardServiceTest {
                 "content", 0L);
 
         //when, then
-        assertThrows(Exception.class, () -> noticeBoardService.create(exceedTitle));
+        assertThrows(Exception.class, () -> noticeBoardService.create(exceedTitle, "Kim"));
     }
 
     /* 게시물 수정 테스트 케이스 */
@@ -60,18 +64,18 @@ class NoticeBoardServiceTest {
         NoticeBoardRequest updateRequest = new NoticeBoardRequest("title-update", "content-update", 0L);
 
         //when
-        noticeBoardService.create(boardRequest); // 새로운 공지 생성
+        noticeBoardService.create(boardRequest, "Kim"); // 새로운 공지 생성
         noticeBoardService.update(1L, updateRequest); // 수정할 공지로 변경
 
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals("title-update", board.title());
-        assertEquals("content-update", board.content());
-        assertEquals(0L, board.delYN());
-        assertNotNull(board.createdAt());
-        assertNotNull(board.createdBy());
-        assertNotNull(board.modifiedAt());
+        assertEquals("title-update", board.getTitle());
+        assertEquals("content-update", board.getContent());
+        assertEquals(0L, board.getDelYN());
+        assertNotNull(board.getCreatedAt());
+        assertNotNull(board.getCreatedBy());
+        assertNotNull(board.getModifiedAt());
     }
 
     /* 게시물 삭제 테스트 케이스 */
@@ -81,13 +85,13 @@ class NoticeBoardServiceTest {
         NoticeBoardRequest boardRequest = new NoticeBoardRequest("title", "content", 0L);
 
         //when
-        noticeBoardService.create(boardRequest); // 공지 생성
+        noticeBoardService.create(boardRequest, "Kim"); // 공지 생성
         noticeBoardService.delete(1L); // 공지 삭제
 
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals(0L, board.delYN()); // delYN: 1 -> 0
+        assertEquals(0L, board.getDelYN()); // delYN: 1 -> 0
     }
 
     /* 게시물 조회 테스트 케이스 */

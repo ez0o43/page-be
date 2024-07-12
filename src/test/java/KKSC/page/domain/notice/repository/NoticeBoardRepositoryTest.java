@@ -1,16 +1,16 @@
 package KKSC.page.domain.notice.repository;
 
-import KKSC.page.domain.member.entity.Member;
 import KKSC.page.domain.member.repository.MemberRepository;
-import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
+import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
-import KKSC.page.domain.notice.entity.NoticeFile;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -21,23 +21,18 @@ class NoticeBoardRepositoryTest {
     @Autowired MemberRepository memberRepository;
 
     @Test
-    void dto_가져오기_성공() throws Exception {
+    void findAll_조회() throws Exception {
         //given
-        Member memberRequest = Member.builder().name("Kim").build();
-        Member member = memberRepository.save(memberRequest);
-
-        NoticeFile noticeFile = new NoticeFile();
-        noticeFileRepository.save(noticeFile);
-
-        NoticeBoard noticeBoard = new NoticeBoard(1L, member,
-                null, null, "title", "content",
-                1L, 0L, 0L);
+        NoticeBoard board = NoticeBoard.builder()
+                .title("title").content("content").keyword(Keyword.TITLE)
+                .fixed(0L).delYN(0L).view(0L).build();
 
         //when
-        noticeBoardRepository.save(noticeBoard);
-        NoticeBoardDetailResponse noticeBoardDetail = noticeBoardRepository.findNoticeBoardDetail(1L);
+        noticeBoardRepository.save(board);
 
         //then
-        assertEquals("title", noticeBoardDetail.title());
+        List<NoticeBoard> boards = noticeBoardRepository.findAll();
+        boards.forEach(System.out::println);
+        assertThat(1).isEqualTo(boards.size());
     }
 }

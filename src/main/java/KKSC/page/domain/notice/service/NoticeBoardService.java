@@ -10,7 +10,7 @@ public interface NoticeBoardService {
 
     void create(NoticeBoardRequest noticeBoardRequest, String memberName);
 
-    void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
+    NoticeBoardDetailResponse update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest);
 
     void delete(Long noticeBoardId);
 

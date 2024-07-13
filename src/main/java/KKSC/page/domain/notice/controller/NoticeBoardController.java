@@ -7,13 +7,15 @@ import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.exeption.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/notice")
+@Slf4j
+@RestController
 @RequiredArgsConstructor
 public class NoticeBoardController {
 
@@ -28,7 +30,7 @@ public class NoticeBoardController {
 
     // 게시글 조회
     @GetMapping("/{id}")
-    public ResponseEntity<NoticeBoardDetailResponse> notice(@PathVariable Long id) {
+    public ResponseEntity<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
 //        NoticeBoardDetailResponse response = new NoticeBoardDetailResponse("Hello", "Spring",
 //                "admin", 1L, 0L, null, null, LocalDateTime.now(), LocalDateTime.now());
         NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
@@ -44,16 +46,16 @@ public class NoticeBoardController {
 
     // 게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<NoticeBoard> noticeUpdate(@PathVariable Long id,@RequestBody NoticeBoardRequest request){
+    public ResponseEntity<NoticeBoard> noticeUpdate(@PathVariable("id") Long id,@RequestBody NoticeBoardRequest request){
         noticeBoardService.update(id, request);
         return ResponseEntity.ok().build();
     }
 
     // 게시글 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> noticeDelete(@PathVariable Long id) {
+    public ResponseVO<Object> noticeDelete(@PathVariable("id") Long id) {
+        log.info("id = {}", id);
         noticeBoardService.delete(id);
-        return ResponseEntity.ok().build();
+        return new ResponseVO<>("Hello World!");
     }
-
 }

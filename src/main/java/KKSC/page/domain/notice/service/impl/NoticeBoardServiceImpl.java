@@ -5,6 +5,8 @@ import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.dto.NoticeFileResponse;
 import KKSC.page.domain.notice.entity.NoticeBoard;
+import KKSC.page.domain.notice.exeption.ErrorCode;
+import KKSC.page.domain.notice.exeption.NoticeBoardException;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,11 +42,14 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * 성공적으로 수정되었다면 NoticeBoardDetailResponse에 수정한 내용 담아서 반환
      */
     @Override
-    public void update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest) {
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId).orElseThrow();
+    public NoticeBoardDetailResponse update(Long noticeBoardId, NoticeBoardRequest noticeBoardRequest) {
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
+                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+
+        List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
         noticeBoard.update(noticeBoardRequest);
 
-        // NoticeBoard -> NoticeBoardDetailResponse 후 반환
+        return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);
     }
 
     /*
@@ -52,20 +58,24 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     public void delete(Long noticeBoardId) {
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId).orElseThrow();
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
+                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
         noticeBoard.delete();
     }
 
     @Override
     public List<NoticeBoardListResponse> getBoardList() {
-//        List<NoticeBoard> noticeBoards = noticeBoardRepository.findAll();
-//        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
-//        for (NoticeBoard noticeBoard : noticeBoards) {
-//            listResponses.add(new NoticeBoardListResponse(noticeBoard));
-//        }
-//        return listResponses;
+        List<NoticeBoard> noticeBoards = noticeBoardRepository.findAll();
 
-        return null;
+        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
+
+        for (NoticeBoard noticeBoard : noticeBoards) {
+            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
+
+            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
+        }
+
+        return listResponses;
     }
 
     /*
@@ -74,7 +84,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     public NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId) {
-        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId).orElseThrow(null);
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
+                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
         List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
 
         return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);

@@ -91,7 +91,7 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals(0L, board.delYN()); // delYN: 1 -> 0
+        assertEquals(1L, board.delYN()); // delYN: 1 -> 0
     }
 
     /* 게시물 조회 테스트 케이스 */

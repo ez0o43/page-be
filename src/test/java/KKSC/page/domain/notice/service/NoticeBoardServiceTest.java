@@ -31,7 +31,7 @@ class NoticeBoardServiceTest {
         System.out.println(board);
 
         //then
-        assertEquals("title", board.getTitle());
+        assertEquals("title", board.title());
     }
 
     /* 게시물 작성 테스트 케이스 */
@@ -70,12 +70,12 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals("title-update", board.getTitle());
-        assertEquals("content-update", board.getContent());
-        assertEquals(0L, board.getDelYN());
-        assertNotNull(board.getCreatedAt());
-        assertNotNull(board.getCreatedBy());
-        assertNotNull(board.getModifiedAt());
+        assertEquals("title-update", board.title());
+        assertEquals("content-update", board.content());
+        assertEquals(0L, board.delYN());
+        assertNotNull(board.createdAt());
+        assertNotNull(board.createdBy());
+        assertNotNull(board.modifiedAt());
     }
 
     /* 게시물 삭제 테스트 케이스 */
@@ -91,7 +91,7 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals(0L, board.getDelYN()); // delYN: 1 -> 0
+        assertEquals(0L, board.delYN()); // delYN: 1 -> 0
     }
 
     /* 게시물 조회 테스트 케이스 */

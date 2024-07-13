@@ -3,8 +3,10 @@ package KKSC.page.domain.notice.service.impl;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
+import KKSC.page.domain.notice.dto.NoticeFileResponse;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
+import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,15 @@ import java.util.List;
 public class NoticeBoardServiceImpl implements NoticeBoardService {
 
     private final NoticeBoardRepository noticeBoardRepository;
+    private final NoticeFileRepository noticeFileRepository;
 
     /*
      * noticeBoardRequest 를 통해 noticeBoard 객체 생성
      * noticeBoardRepository 에 저장
      */
     @Override
-    public void create(NoticeBoardRequest noticeBoardRequest) {
-        NoticeBoard noticeBoard = noticeBoardRequest.toEntity();
+    public void create(NoticeBoardRequest noticeBoardRequest, String memberName) {
+        NoticeBoard noticeBoard = noticeBoardRequest.toEntity(memberName);
 
         noticeBoardRepository.save(noticeBoard);
     }
@@ -71,11 +74,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     public NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId) {
-//        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId).orElseThrow(null);
-//        NoticeBoardDetailResponse detailResponse = new NoticeBoardDetailResponse(noticeBoard);
-//        return detailResponse;
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId).orElseThrow(null);
+        List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
 
-        return null;
+        return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);
     }
 
     /*

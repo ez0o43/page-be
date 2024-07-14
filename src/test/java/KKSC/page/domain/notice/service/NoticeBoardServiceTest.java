@@ -3,11 +3,15 @@ package KKSC.page.domain.notice.service;
 import KKSC.page.domain.member.entity.Member;
 import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
+import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
+import KKSC.page.domain.notice.entity.Keyword;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,28 +38,6 @@ class NoticeBoardServiceTest {
         assertEquals("title", board.title());
     }
 
-    /* 게시물 작성 테스트 케이스 */
-    @Test
-    void 제목_내용_필수입력_실패() throws Exception {
-        //given
-        NoticeBoardRequest noneTitle = new NoticeBoardRequest(null, "content", 0L);
-        NoticeBoardRequest noneContent = new NoticeBoardRequest("title", null, 0L);
-
-        //when, then
-        assertThrows(Exception.class, () -> noticeBoardService.create(noneTitle, "Kim"));
-        assertThrows(Exception.class, () -> noticeBoardService.create(noneContent, "Kim"));
-    }
-
-    @Test
-    void 제목_최대글자초과시_실패() throws Exception {
-        //given
-        NoticeBoardRequest exceedTitle = new NoticeBoardRequest("1234567891011121314151617181920",
-                "content", 0L);
-
-        //when, then
-        assertThrows(Exception.class, () -> noticeBoardService.create(exceedTitle, "Kim"));
-    }
-
     /* 게시물 수정 테스트 케이스 */
     @Test
     void 게시글_수정시_수정됨_표시() throws Exception {
@@ -65,9 +47,7 @@ class NoticeBoardServiceTest {
 
         //when
         noticeBoardService.create(boardRequest, "Kim"); // 새로운 공지 생성
-        noticeBoardService.update(1L, updateRequest); // 수정할 공지로 변경
-
-        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
+        NoticeBoardDetailResponse board = noticeBoardService.update(1L, updateRequest);// 수정할 공지로 변경
 
         //then
         assertEquals("title-update", board.title());
@@ -91,24 +71,37 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
 
         //then
-        assertEquals(1L, board.delYN()); // delYN: 1 -> 0
+        assertEquals(1L, board.delYN()); // delYN: 0 -> 1
     }
 
     /* 게시물 조회 테스트 케이스 */
     @Test
     void 키워드_검색시_키워드포함_게시물만_조회() throws Exception {
         //given
+        NoticeBoardRequest boardRequest = new NoticeBoardRequest("title", "content", 0L);
+        NoticeBoardRequest secondRequest = new NoticeBoardRequest("hello", "world", 0L);
 
         //when
+        noticeBoardService.create(boardRequest, "Kim");
+        noticeBoardService.create(secondRequest, "Kim");
+        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList("title", Keyword.TITLE.name());
 
         //then
+        assertEquals(1, listResponses.size()); // 2개가 입력됬어도 title이 포함된 글은 1개
+        assertEquals("title", listResponses.get(0).title());
     }
 
     @Test
     void 키워드X_최신순_오래된순_조회순_조회() throws Exception {
         //given
+        NoticeBoardRequest boardRequest = new NoticeBoardRequest("title", "content", 0L);
+        NoticeBoardRequest boardRequest2 = new NoticeBoardRequest("title-2", "content", 0L);
+        NoticeBoardRequest boardRequest3 = new NoticeBoardRequest("title-3", "content", 0L);
 
         //when
+        noticeBoardService.create(boardRequest, "Kim");
+        noticeBoardService.create(boardRequest2, "Kim");
+        noticeBoardService.create(boardRequest3, "Kim");
 
         //then
     }

@@ -3,13 +3,10 @@ package KKSC.page.domain.notice.controller;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.exeption.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,30 +23,28 @@ public class NoticeBoardController {
     @GetMapping("/list")
     public ResponseVO<List<NoticeBoardListResponse>> noticeList(){
         List<NoticeBoardListResponse> listResponse = noticeBoardService.getBoardList();
-        return null;
+        return new ResponseVO<>(listResponse);
     }
 
     // 게시글 조회
     @GetMapping("/{id}")
-    public ResponseEntity<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
-//        NoticeBoardDetailResponse response = new NoticeBoardDetailResponse("Hello", "Spring",
-//                "admin", 1L, 0L, null, null, LocalDateTime.now(), LocalDateTime.now());
+    public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
         NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
-        return ResponseEntity.ok().body(detailResponse);
+        return new ResponseVO<>(detailResponse);
     }
 
     // 게시글 작성
     @PostMapping("/")
-    public ResponseEntity<NoticeBoard> noticeCreate(@RequestBody NoticeBoardRequest request) {
+    public ResponseVO<NoticeBoardDetailResponse> noticeCreate(@RequestBody NoticeBoardRequest request) {
         noticeBoardService.create(request, null);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseVO<>(null);
     }
 
     // 게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<NoticeBoard> noticeUpdate(@PathVariable("id") Long id,@RequestBody NoticeBoardRequest request){
-        noticeBoardService.update(id, request);
-        return ResponseEntity.ok().build();
+    public ResponseVO<NoticeBoardDetailResponse> noticeUpdate(@PathVariable("id") Long id,@RequestBody NoticeBoardRequest request){
+        NoticeBoardDetailResponse detailResponse = noticeBoardService.update(id, request);
+        return new ResponseVO<>(detailResponse);
     }
 
     // 게시글 삭제
@@ -57,6 +52,6 @@ public class NoticeBoardController {
     public ResponseVO<Object> noticeDelete(@PathVariable("id") Long id) {
         log.info("id = {}", id);
         noticeBoardService.delete(id);
-        return new ResponseVO<>("Hello World!");
+        return new ResponseVO<>("Delete success");
     }
 }

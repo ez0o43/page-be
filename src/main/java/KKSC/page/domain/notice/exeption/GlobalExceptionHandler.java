@@ -1,5 +1,6 @@
 package KKSC.page.domain.notice.exeption;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -7,10 +8,25 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoticeBoardException.class)
-    public ErrorResponseVO handleCustomException(NoticeBoardException ex) {
+    public ErrorResponseVO handleNoticeBoardException(NoticeBoardException ex) {
         ErrorCode errorCode = ex.getErrorCode();
 
         return getErrorResponse(errorCode);
+    }
+
+    @ExceptionHandler(NoticeFileException.class)
+    public ErrorResponseVO handleNoticeFileException(NoticeFileException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+
+        return getErrorResponse(errorCode);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorResponseVO handleValidationException(MethodArgumentNotValidException ex) {
+        return ErrorResponseVO.builder()
+                .name("MethodArgumentNotValidException")
+                .errorCode(ex.getStatusCode().value())
+                .message(ex.getMessage()).build();
     }
 
     private ErrorResponseVO getErrorResponse(ErrorCode errorCode) {

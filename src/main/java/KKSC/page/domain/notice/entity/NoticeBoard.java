@@ -1,6 +1,5 @@
 package KKSC.page.domain.notice.entity;
 
-import KKSC.page.domain.member.entity.Member;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -20,9 +19,6 @@ public class NoticeBoard extends BaseTimeEntity {
     @Column(name = "notice_board_id")
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
     private String memberName;
 
     @OneToMany(mappedBy = "noticeBoard")

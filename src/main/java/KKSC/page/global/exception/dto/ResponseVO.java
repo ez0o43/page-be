@@ -1,4 +1,4 @@
-package KKSC.page.domain.notice.exeption;
+package KKSC.page.global.exception.dto;
 
 public record ResponseVO<T> (
         T data

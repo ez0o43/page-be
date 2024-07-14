@@ -5,7 +5,7 @@ import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.dto.NoticeFileResponse;
 import KKSC.page.domain.notice.entity.NoticeBoard;
-import KKSC.page.domain.notice.exeption.ErrorCode;
+import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.domain.notice.exeption.NoticeBoardException;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;

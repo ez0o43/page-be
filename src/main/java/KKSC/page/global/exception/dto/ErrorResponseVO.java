@@ -1,4 +1,4 @@
-package KKSC.page.domain.notice.exeption;
+package KKSC.page.global.exception.dto;
 
 import lombok.Builder;
 

@@ -1,5 +1,8 @@
-package KKSC.page.domain.notice.exeption;
+package KKSC.page.global.exception;
 
+import KKSC.page.domain.notice.exeption.NoticeBoardException;
+import KKSC.page.domain.notice.exeption.NoticeFileException;
+import KKSC.page.global.exception.dto.ErrorResponseVO;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

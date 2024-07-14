@@ -1,5 +1,6 @@
 package KKSC.page.domain.notice.exeption;
 
+import KKSC.page.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

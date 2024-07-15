@@ -11,6 +11,7 @@ import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeBoardServiceImpl implements NoticeBoardService {
 
     private final NoticeBoardRepository noticeBoardRepository;
@@ -30,10 +32,11 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * noticeBoardRepository 에 저장
      */
     @Override
-    public void create(NoticeBoardRequest noticeBoardRequest, String memberName) {
+    public Long create(NoticeBoardRequest noticeBoardRequest, String memberName) {
         NoticeBoard noticeBoard = noticeBoardRequest.toEntity(memberName);
+        log.info("noticeBoard = {}", noticeBoard);
 
-        noticeBoardRepository.save(noticeBoard);
+        return noticeBoardRepository.save(noticeBoard).getId();
     }
 
     /*
@@ -60,6 +63,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     public void delete(Long noticeBoardId) {
         NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
                 .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+
+        if (noticeBoard.getDelYN() == 1L) {
+            throw new NoticeBoardException(ErrorCode.ALREADY_DELETED);
+        }
         noticeBoard.delete();
     }
 

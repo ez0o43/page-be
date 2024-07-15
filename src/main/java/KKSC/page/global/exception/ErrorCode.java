@@ -15,6 +15,7 @@ public enum ErrorCode {
     NOT_FOUND_CONTENT(00, "내용을 입력하세요."),
     TITLE_MAX_NUMBER(00, "최대 글자 수를 초과했습니다."),
     NOT_FOUND_BOARD(00, "게시물을 찾을 수 없습니다."),
+    ALREADY_DELETED(00, "이미 삭제된 게시물입니다."),
 
     /* 파일 */
     FILE_OVERSIZE(00, "파일 용량을 초과했습니다."),

@@ -3,6 +3,7 @@ package KKSC.page.domain.notice.controller;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
+import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.global.exception.dto.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +54,9 @@ public class NoticeBoardController {
         log.info("id = {}", id);
         noticeBoardService.delete(id);
         return new ResponseVO<>("Delete success");
+    }
+    @GetMapping("/search")
+    public List<NoticeBoardListResponse> searchBoards(@RequestParam Keyword keyword, @RequestParam String query) {
+        return noticeBoardService.searchBoardList(keyword, query);
     }
 }

@@ -30,8 +30,8 @@ class NoticeBoardServiceTest {
 
         //when
         memberRepository.save(member);
-        noticeBoardService.create(request, member.getUsername());
-        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
+        Long createdId = noticeBoardService.create(request, member.getUsername());
+        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(createdId);
         System.out.println(board);
 
         //then
@@ -46,8 +46,8 @@ class NoticeBoardServiceTest {
         NoticeBoardRequest updateRequest = new NoticeBoardRequest("title-update", "content-update", 0L);
 
         //when
-        noticeBoardService.create(boardRequest, "Kim"); // 새로운 공지 생성
-        NoticeBoardDetailResponse board = noticeBoardService.update(1L, updateRequest);// 수정할 공지로 변경
+        Long createdId = noticeBoardService.create(boardRequest, "Kim");// 새로운 공지 생성
+        NoticeBoardDetailResponse board = noticeBoardService.update(createdId, updateRequest);// 수정할 공지로 변경
 
         //then
         assertEquals("title-update", board.title());
@@ -65,10 +65,10 @@ class NoticeBoardServiceTest {
         NoticeBoardRequest boardRequest = new NoticeBoardRequest("title", "content", 0L);
 
         //when
-        noticeBoardService.create(boardRequest, "Kim"); // 공지 생성
-        noticeBoardService.delete(1L); // 공지 삭제
+        Long createdId = noticeBoardService.create(boardRequest, "Kim");// 공지 생성
+        noticeBoardService.delete(createdId); // 공지 삭제
 
-        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(1L);
+        NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(createdId);
 
         //then
         assertEquals(1L, board.delYN()); // delYN: 0 -> 1
@@ -84,7 +84,7 @@ class NoticeBoardServiceTest {
         //when
         noticeBoardService.create(boardRequest, "Kim");
         noticeBoardService.create(secondRequest, "Kim");
-        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList("title", Keyword.TITLE.name());
+        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(Keyword.TITLE, "title");
 
         //then
         assertEquals(1, listResponses.size()); // 2개가 입력됬어도 title이 포함된 글은 1개

@@ -56,7 +56,9 @@ public class NoticeBoardController {
         return new ResponseVO<>("Delete success");
     }
     @GetMapping("/search")
-    public List<NoticeBoardListResponse> searchBoards(@RequestParam Keyword keyword, @RequestParam String query) {
-        return noticeBoardService.searchBoardList(keyword, query);
+    public ResponseVO<List<NoticeBoardListResponse>> searchBoards(@RequestParam Keyword keyword, @RequestParam String query) {
+        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(keyword, query);
+
+        return new ResponseVO<>(listResponses);
     }
 }

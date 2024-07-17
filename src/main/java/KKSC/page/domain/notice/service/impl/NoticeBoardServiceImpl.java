@@ -4,6 +4,7 @@ import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.dto.NoticeFileResponse;
+import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.domain.notice.exeption.NoticeBoardException;
@@ -103,7 +104,17 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * keyword type에 따라 어디서 %like% 쓸지
      */
     @Override
-    public List<NoticeBoardListResponse> searchBoardList(String query, String keyword) {
-        return null;
+    public List<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query) {
+
+        List<NoticeBoard> noticeBoards = noticeBoardRepository.searchBoardList(keyword, query);
+
+        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
+
+        for (NoticeBoard noticeBoard : noticeBoards) {
+            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
+
+            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
+        }
+        return listResponses;
     }
 }

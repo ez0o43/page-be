@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -110,7 +107,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
             throw new NoticeFileException(ErrorCode.NOT_FOUND_FILE);
         }
 
-        return Integer.toString(total) + " 중 " + Integer.toString(cnt) + " 성공 ";
+        return total + " 중 " + cnt + " 성공 ";
     }
 
     /**

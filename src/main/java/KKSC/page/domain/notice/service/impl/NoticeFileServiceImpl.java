@@ -1,51 +1,47 @@
 package KKSC.page.domain.notice.service.impl;
 
-import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import KKSC.page.domain.notice.entity.NoticeFile;
+import KKSC.page.domain.notice.exeption.NoticeFileException;
+import KKSC.page.domain.notice.repository.NoticeFileRepository;
+import KKSC.page.domain.notice.service.NoticeFileService;
+import KKSC.page.global.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.core.io.Resource;
 
-import KKSC.page.domain.notice.entity.NoticeFile;
-import KKSC.page.domain.notice.repository.NoticeFileRepository;
-import KKSC.page.domain.notice.service.NoticeFileService;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeFileServiceImpl implements NoticeFileService {
 
-    @Autowired
-    ResourceLoader resourceLoader;
-
-    @Autowired
-    HttpServletResponse response;
-
+    private final HttpServletResponse response;
     private final NoticeFileRepository noticeFileRepository;
 
-    // 업로드 경로 지정 (경로 수정 예정 / 경로 수정 해야 테스트 가능 / 환경변수에 넣을 예정 )
-    // 절대 경로
-    private final String uploadPath = Paths.get("/Users/ijunhyeong/kkscve/page-be/src/main/resources/noticefile").toString();
-    private final Path directoryPath = Paths.get("src", "main", "resources","noticefile");
+    // 업로드 경로 지정
+    @Value(value = "${fileUploadBaseUrl}")
+    private String uploadPath;
+
     /**
      * 공지사항 파일 업로드
      * @param noticeBoardId : 파일업로드 하고자 하는 공지사항 게시물의 번호
@@ -59,9 +55,10 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     public String uploadFile(MultipartHttpServletRequest multipartHttpServletRequest, Long noticeBoardId) throws Exception, IOException {
         /*
          * 경로,파일명,파일사이즈,파일타입 빌더패턴으로 묶어서 정보 DB에 저장 후 서버에 파일 업로드
-         * 
          */
-        File Folder = new File(uploadPath.toString());
+        log.info("uploadPath = {}", uploadPath);
+
+        File Folder = new File(uploadPath);
         // 폴더없을경우 생성 
         if (!Folder.exists()) {
             Folder.mkdir(); // 디렉터리 생성.
@@ -87,7 +84,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
                     if (!(multipartFile.getOriginalFilename() == null
                             || multipartFile.getOriginalFilename().isEmpty())) {
                         // File명 uuid 생성
-                        String noticeFileNameUuid = multipartFile.getOriginalFilename()+UUID.randomUUID().toString();
+                        String noticeFileNameUuid = multipartFile.getOriginalFilename() + UUID.randomUUID();
                         // File Baseurl 설정 
                         String completeuploadPath = uploadPath + "/" + noticeFileNameUuid;
                         // DB에 저장
@@ -105,12 +102,12 @@ public class NoticeFileServiceImpl implements NoticeFileService {
                         // 실제 파일 업로드 
                         File uploadFile = new File(completeuploadPath);
                         multipartFile.transferTo(uploadFile);
-                    } else
+                    } else // 앞선 파일이 조건에 걸려 안 걸어가면 뒤 파일을 올려야 함
                         continue;
                 }
             }
         } else {
-            return "UPLOADFILEISNULL";
+            throw new NoticeFileException(ErrorCode.NOT_FOUND_FILE);
         }
 
         return Integer.toString(total) + " 중 " + Integer.toString(cnt) + " 성공 ";
@@ -124,25 +121,25 @@ public class NoticeFileServiceImpl implements NoticeFileService {
      * @version 0.01
      */
     @Override
-    public ResponseEntity<Object> downloadFile(Long noticeFileId) {
-        Optional<NoticeFile> noticeFile = noticeFileRepository.findById(noticeFileId);
-        String path = noticeFile.get().getNoticeFileBaseUrl();
+    public Resource downloadFile(Long noticeFileId) {
+        NoticeFile noticeFile = noticeFileRepository.findById(noticeFileId)
+                .orElseThrow(() -> new NoticeFileException(ErrorCode.NOT_FOUND_FILE));
+        String path = noticeFile.getNoticeFileBaseUrl();
 
         try {
             // 파일 경로 지정
-            Path filePath = Paths.get(noticeFile.get().getNoticeFileBaseUrl());
+            Path filePath = Paths.get(noticeFile.getNoticeFileBaseUrl());
             // 파일 불러오기 
             Resource resource = new InputStreamResource(Files.newInputStream(filePath)); // 파일 resource 얻기
             File file = new File(path);
 
             // 파일 이름 지정
-            String filename = URLEncoder.encode(noticeFile.get().getNoticeFileName(), "UTF-8");
+            String filename = URLEncoder.encode(noticeFile.getNoticeFileName(), StandardCharsets.UTF_8);
             // 헤더 설정
             response.setHeader("Content-Disposition", "attachment; fileName=\"" + filename + "\"");
-
-            return new ResponseEntity<Object>(resource, HttpStatus.OK);
+            return resource;
         } catch (Exception e) {
-            return new ResponseEntity<Object>(null, HttpStatus.CONFLICT);
+            throw new NoticeFileException(ErrorCode.NOT_FOUND_FILE);
         }
     }
 
@@ -158,20 +155,16 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         /*
          * 파일아이디로 DB에서 파일 경로 찾아서 삭제 후 DB에서도 해당 데이터 삭제
          */
-        Optional<NoticeFile> noticeFile = noticeFileRepository.findById(noticeFileId);
+        NoticeFile noticeFile = noticeFileRepository.findById(noticeFileId)
+                .orElseThrow(() -> new NoticeFileException(ErrorCode.NOT_FOUND_FILE));
+
         // 파일 지정
-        File file = new File(noticeFile.get().getNoticeFileBaseUrl());
-        if( file.exists() ){
-            // file 삭제 
-            if(file.delete()){
-                // DB 데이터 삭제 
-                noticeFileRepository.deleteById(noticeFileId);
-            }else{
-                log.info("error");
-            }
-        }else{
-            log.info("데이터 없음");
-        }
-        return null;
+        File file = new File(noticeFile.getNoticeFileBaseUrl());
+
+        // 파일 삭제
+        file.delete();
+        noticeFileRepository.deleteById(noticeFileId);
+
+        return "파일 삭제 성공";
     }
 }

@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponseVO handleValidationException(MethodArgumentNotValidException ex) {
         return ErrorResponseVO.builder()
-                .name("MethodArgumentNotValidException")
+                .name("VALIDATION_ERROR")
                 .errorCode(ex.getStatusCode().value())
-                .message(ex.getMessage()).build();
+                .message("정확한 규격에 맞춰 입력하세요.").build();
     }
 
     private ErrorResponseVO getErrorResponse(ErrorCode errorCode) {

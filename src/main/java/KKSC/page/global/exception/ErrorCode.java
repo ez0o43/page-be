@@ -19,6 +19,7 @@ public enum ErrorCode {
 
     /* 파일 */
     FILE_OVERSIZE(00, "파일 용량을 초과했습니다."),
+    NOT_FOUND_FILE(00, "파일을 찾을 수 없습니다."),
 
     /* 캘린더 */
 

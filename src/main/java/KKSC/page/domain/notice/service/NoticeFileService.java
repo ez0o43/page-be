@@ -1,5 +1,6 @@
 package KKSC.page.domain.notice.service;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -19,7 +20,7 @@ public interface NoticeFileService {
 	 * @return 미정
 	 * @since 2024.07.06
 	 */
-	ResponseEntity<Object> downloadFile(Long noticeFileId);
+	Resource downloadFile(Long noticeFileId);
 
 	/**
 	 * 공지사항 파일 삭제

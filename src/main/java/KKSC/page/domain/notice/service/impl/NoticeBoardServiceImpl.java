@@ -105,7 +105,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     public List<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query) {
-
         List<NoticeBoard> noticeBoards = noticeBoardRepository.searchBoardList(keyword, query);
 
         List<NoticeBoardListResponse> listResponses = new ArrayList<>();

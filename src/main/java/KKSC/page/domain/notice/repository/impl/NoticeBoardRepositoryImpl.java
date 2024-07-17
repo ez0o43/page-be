@@ -20,28 +20,21 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
 
     @Override
     public List<NoticeBoard> searchBoardList(Keyword keyword, String query) {
-
-        List<NoticeBoard> noticeBoards = queryFactory
+        return queryFactory
                 .selectFrom(noticeBoard)
                 .where(
                         noticeBoard.delYN.eq(0L),
                         getKeywordQuery(keyword, query)
                 )
                 .fetch();
-        return noticeBoards;
     }
 
     private BooleanExpression getKeywordQuery(Keyword keyword, String query) {
-        switch (keyword) {
-            case TITLE:
-                return noticeBoard.title.contains(query);
-            case CONTENT:
-                return noticeBoard.content.contains(query);
-            case TITLE_CONTENT:
-                return (noticeBoard.title.contains(query)).or(noticeBoard.content.contains(query));
-            case CREATED_BY:
-                return noticeBoard.memberName.contains(query);
-        }
-        return null;
+        return switch (keyword) {
+            case TITLE -> noticeBoard.title.contains(query);
+            case CONTENT -> noticeBoard.content.contains(query);
+            case TITLE_CONTENT -> (noticeBoard.title.contains(query)).or(noticeBoard.content.contains(query));
+            case CREATED_BY -> noticeBoard.memberName.contains(query);
+        };
     }
 }

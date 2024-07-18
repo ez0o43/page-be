@@ -1,4 +1,12 @@
 package KKSC.page.domain.member.service;
 
-public class MemberService {
+import KKSC.page.domain.member.dto.MemberRequest;
+
+public interface MemberService {
+
+    void register(MemberRequest memberRequest);
+
+    void retire(String email);
+
+    void update(MemberRequest memberRequest);
 }

@@ -3,6 +3,7 @@ package KKSC.page.domain.notice.controller;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
+import KKSC.page.domain.notice.dto.NoticePageResponse;
 import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
@@ -36,8 +37,10 @@ public class NoticeBoardController {
 
     // 게시글 목록 조회(페이징)
     @GetMapping("/list/page")
-    public Page<NoticeBoardListResponse> noticeListPage(@PageableDefault Pageable pageable) {
-        return noticeBoardService.getBoardList(pageable);
+    public NoticePageResponse<NoticeBoardListResponse> noticeListPage(@PageableDefault Pageable pageable) {
+        Page<NoticeBoardListResponse> boardList = noticeBoardService.getBoardList(pageable);
+
+        return new NoticePageResponse<>(boardList);
     }
 
     // 게시글 조회

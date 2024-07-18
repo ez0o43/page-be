@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,8 @@ public class Member implements UserDetails {
     @Enumerated(EnumType.STRING)
 //    @Column(name = "permission", nullable = false)
     private Permission permission;
+
+    private String refreshToken;
 
     @Builder
     public Member(String password, String username, String email, String studentId, Permission permission) {
@@ -86,8 +89,19 @@ public class Member implements UserDetails {
         return true;
     }
 
-    //추가
-    public void upadatePassword(MemberRequest memberRequest) {
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(this.password);
+    }
+
+    public void updatePassword(MemberRequest memberRequest) {
         this.password = memberRequest.password();
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void destroyRefreshToken() {
+        this.refreshToken = null;
     }
 }

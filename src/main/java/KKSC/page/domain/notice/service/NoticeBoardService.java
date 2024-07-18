@@ -17,11 +17,9 @@ public interface NoticeBoardService {
 
     void delete(Long noticeBoardId);
 
-    List<NoticeBoardListResponse> getBoardList(); /* 기본적으로 보여줄 게시글 목록 */
+    Page<NoticeBoardListResponse> getBoardList(Pageable pageable); /* 기본적으로 보여줄 게시글 목록 */
 
     NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId); /* 글 선택 시 보여줄 상세 글 */
 
     List<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query); /* 작성일 순, 작성자가 포함된 글 불러오기 */
-
-    Page<NoticeBoardListResponse> getBoardList(Pageable pageable);
 }

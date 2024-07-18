@@ -1,7 +1,10 @@
 package KKSC.page.domain.notice.service.impl;
 
+import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.entity.NoticeFile;
+import KKSC.page.domain.notice.exeption.NoticeBoardException;
 import KKSC.page.domain.notice.exeption.NoticeFileException;
+import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeFileService;
 import KKSC.page.global.exception.ErrorCode;
@@ -34,6 +37,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 
     private final HttpServletResponse response;
     private final NoticeFileRepository noticeFileRepository;
+    private final NoticeBoardRepository noticeBoardRepository;
 
     // 업로드 경로 지정
     @Value(value = "${fileUploadBaseUrl}")
@@ -92,6 +96,15 @@ public class NoticeFileServiceImpl implements NoticeFileService {
                                 .noticeFileType(multipartFile.getContentType())
                                 .noticeFileSize(multipartFile.getSize())
                                 .build();
+
+                        // 게시글 번호로 게시글 찾아서 파일 추가
+                        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
+                                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+
+                        noticeFile.addNoticeBoard(noticeBoard);
+
+                        // 파일 여부 업데이트
+                        noticeBoard.updateFileYN();
 
                         noticeFileRepository.save(noticeFile);
                         
@@ -155,12 +168,19 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         NoticeFile noticeFile = noticeFileRepository.findById(noticeFileId)
                 .orElseThrow(() -> new NoticeFileException(ErrorCode.NOT_FOUND_FILE));
 
+        NoticeBoard noticeBoard = noticeFile.getNoticeBoard();
+
         // 파일 지정
         File file = new File(noticeFile.getNoticeFileBaseUrl());
 
         // 파일 삭제
+        noticeBoard.deleteFile(noticeFile);
         file.delete();
-        noticeFileRepository.deleteById(noticeFileId);
+
+        noticeFileRepository.delete(noticeFile);
+
+        // 파일 삭제 후 파일 여부 업데이트
+        noticeBoard.updateFileYN();
 
         return "파일 삭제 성공";
     }

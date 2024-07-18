@@ -3,12 +3,11 @@ package KKSC.page.domain.notice.controller;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
-import KKSC.page.domain.notice.dto.NoticePageResponse;
 import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
-import KKSC.page.global.exception.dto.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
+import KKSC.page.global.exception.dto.ResponseVO;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,25 +27,18 @@ public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
 
-    // 게시글 목록 조회
-    @GetMapping("/list")
-    public ResponseVO<List<NoticeBoardListResponse>> noticeList(){
-        List<NoticeBoardListResponse> listResponse = noticeBoardService.getBoardList();
-        return new ResponseVO<>(listResponse);
-    }
-
     // 게시글 목록 조회(페이징)
-    @GetMapping("/list/page")
-    public NoticePageResponse<NoticeBoardListResponse> noticeListPage(@PageableDefault Pageable pageable) {
-        Page<NoticeBoardListResponse> boardList = noticeBoardService.getBoardList(pageable);
-
-        return new NoticePageResponse<>(boardList);
+    @GetMapping("/list")
+    public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(Pageable pageable) {
+        Page<NoticeBoardListResponse> listResponses = noticeBoardService.getBoardList(pageable);
+        return new ResponseVO<>(listResponses);
     }
 
     // 게시글 조회
     @GetMapping("/{id}")
     public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
         NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
+
         return new ResponseVO<>(detailResponse);
     }
 
@@ -54,6 +46,7 @@ public class NoticeBoardController {
     @PostMapping("/")
     public ResponseVO<Long> noticeCreate(@RequestBody @Valid NoticeBoardRequest request) {
         Long createdId = noticeBoardService.create(request, null);// memberName은 이후 로그인 구현 후 추가
+
         return new ResponseVO<>(createdId);
     }
 
@@ -61,6 +54,7 @@ public class NoticeBoardController {
     @PutMapping("/{id}")
     public ResponseVO<NoticeBoardDetailResponse> noticeUpdate(@PathVariable("id") Long id,@RequestBody @Valid NoticeBoardRequest request){
         NoticeBoardDetailResponse detailResponse = noticeBoardService.update(id, request);
+
         return new ResponseVO<>(detailResponse);
     }
 
@@ -68,6 +62,7 @@ public class NoticeBoardController {
     @DeleteMapping("/{id}")
     public ResponseVO<String> noticeDelete(@PathVariable("id") Long id) {
         noticeBoardService.delete(id);
+
         return new ResponseVO<>("Delete success");
     }
 
@@ -96,6 +91,7 @@ public class NoticeBoardController {
                     .title("title" + i)
                     .content("content" + i)
                     .memberName("member" + i)
+                    .delYN(0L)
                     .build();
             noticeBoardRepository.save(noticeBoard);
         }

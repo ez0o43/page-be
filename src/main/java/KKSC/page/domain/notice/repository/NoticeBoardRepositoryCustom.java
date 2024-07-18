@@ -13,6 +13,5 @@ public interface NoticeBoardRepositoryCustom {
     // 키워드 검색
     List<NoticeBoard> searchBoardList(Keyword keyword, String query);
 
-    // 페이징 처리
     Page<NoticeBoardListResponse> loadNoticeBoardList(Pageable pageable);
 }

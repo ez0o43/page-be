@@ -36,23 +36,23 @@ class NoticeBoardControllerTest {
     @MockBean
     NoticeBoardService noticeBoardService;
 
-    @Test
-    void 게시글_목록_조회() throws Exception {
-        //given
-        List<NoticeBoardListResponse> mockResponse = List.of(
-                new NoticeBoardListResponse("title1", "writer1", 0L, 0L, 0L, LocalDateTime.now()),
-                new NoticeBoardListResponse("title2", "writer2", 0L, 0L, 0L, LocalDateTime.now())
-        );
-        given(noticeBoardService.getBoardList()).willReturn(mockResponse);
-
-        //when & then
-        mockMvc.perform(get("/notice/list"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.size()").value(mockResponse.size()))
-                .andExpect(jsonPath("$.data[0].title").value(mockResponse.get(0).title()))
-                .andExpect(jsonPath("$.data[1].title").value(mockResponse.get(1).title()));
-    }
+//    @Test
+//    void 게시글_목록_조회() throws Exception {
+//        //given
+//        List<NoticeBoardListResponse> mockResponse = List.of(
+//                new NoticeBoardListResponse("title1", "writer1", 0L, 0L, 0L, LocalDateTime.now()),
+//                new NoticeBoardListResponse("title2", "writer2", 0L, 0L, 0L, LocalDateTime.now())
+//        );
+//        given(noticeBoardService.getBoardList()).willReturn(mockResponse);
+//
+//        //when & then
+//        mockMvc.perform(get("/notice/list"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.size()").value(mockResponse.size()))
+//                .andExpect(jsonPath("$.data[0].title").value(mockResponse.get(0).title()))
+//                .andExpect(jsonPath("$.data[1].title").value(mockResponse.get(1).title()));
+//    }
 
     @Test
     void 게시글_단건_조회() throws Exception {

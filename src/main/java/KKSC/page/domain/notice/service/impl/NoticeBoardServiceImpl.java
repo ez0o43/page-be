@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,21 +75,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     @Override
-    public List<NoticeBoardListResponse> getBoardList() {
-        List<NoticeBoard> noticeBoards = noticeBoardRepository.findAll();
-
-        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
-
-        for (NoticeBoard noticeBoard : noticeBoards) {
-            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
-
-            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
-        }
-
-        return listResponses;
-    }
-
-    @Override
     public Page<NoticeBoardListResponse> getBoardList(Pageable pageable) {
         return noticeBoardRepository.loadNoticeBoardList(pageable);
     }
@@ -101,6 +87,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     public NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId) {
         NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
                 .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+
         List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
 
         return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);
@@ -112,15 +99,16 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     public List<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query) {
-        List<NoticeBoard> noticeBoards = noticeBoardRepository.searchBoardList(keyword, query);
-
-        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
-
-        for (NoticeBoard noticeBoard : noticeBoards) {
-            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
-
-            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
-        }
-        return listResponses;
+//        List<NoticeBoard> noticeBoards = noticeBoardRepository.searchBoardList(keyword, query);
+//
+//        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
+//
+//        for (NoticeBoard noticeBoard : noticeBoards) {
+//            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
+//
+//            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
+//        }
+//        return listResponses;
+        return null;
     }
 }

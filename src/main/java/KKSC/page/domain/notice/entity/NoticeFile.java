@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class NoticeFile extends BaseTimeEntity {
 
     // 파일명 고유번호
@@ -40,13 +41,8 @@ public class NoticeFile extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0")
     private int noticeFileDownloadCnt;
 
-    @Builder
-    public NoticeFile (String noticeFileNameUuid,String noticeFileName, String noticeFileBaseUrl,
-    Long noticeFileSize,String noticeFileType) {
-        this.noticeFileNameUuid = noticeFileNameUuid;
-        this.noticeFileName = noticeFileName;
-        this.noticeFileBaseUrl = noticeFileBaseUrl;
-        this.noticeFileSize = noticeFileSize;
-        this.noticeFileType = noticeFileType;
+    public void addNoticeBoard(NoticeBoard noticeBoard) {
+        this.noticeBoard = noticeBoard;
+        noticeBoard.getNoticeFiles().add(this);
     }
 }

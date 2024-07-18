@@ -24,6 +24,8 @@ public class NoticeBoard extends BaseTimeEntity {
     @OneToMany(mappedBy = "noticeBoard")
     private List<NoticeFile> noticeFiles;
 
+    private Long fileYN; /* 첨부파일 여부 */
+
     @Enumerated(EnumType.STRING)
     private Keyword keyword; /* (제목, 내용, 작성자)로 검색. default 제목 */
 
@@ -42,5 +44,18 @@ public class NoticeBoard extends BaseTimeEntity {
 
     public void delete() {
         this.delYN = 1L;
+    }
+
+    public void deleteFile(NoticeFile noticeFile) {
+        for (NoticeFile file : noticeFiles) {
+            if (file.getId().equals(noticeFile.getId())) {
+                noticeFiles.remove(file);
+                break;
+            }
+        }
+    }
+
+    public void updateFileYN() {
+        this.fileYN = noticeFiles.isEmpty() ? 0L : 1L;
     }
 }

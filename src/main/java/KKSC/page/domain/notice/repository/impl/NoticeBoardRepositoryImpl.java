@@ -1,14 +1,14 @@
 package KKSC.page.domain.notice.repository.impl;
 
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
-import KKSC.page.domain.notice.entity.*;
+import KKSC.page.domain.notice.entity.Keyword;
+import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-
-import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import static KKSC.page.domain.notice.entity.QNoticeBoard.noticeBoard;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
@@ -40,11 +41,8 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
         List<NoticeBoardListResponse> result = queryFactory
                 .select(Projections.constructor(NoticeBoardListResponse.class,
                         noticeBoard.title,
-                        noticeBoard.memberName,
-                        new CaseBuilder()
-                                .when(noticeBoard.noticeFiles.isEmpty())
-                                .then(0L)
-                                .otherwise(1L),
+                        noticeBoard.memberName.as("createdBy"),
+                        noticeBoard.fileYN,
                         noticeBoard.view,
                         noticeBoard.delYN,
                         noticeBoard.createdAt
@@ -60,7 +58,6 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
 
         return new PageImpl<>(result, pageable, totalCount);
     }
-
 
     private BooleanExpression getKeywordQuery(Keyword keyword, String query) {
         return switch (keyword) {

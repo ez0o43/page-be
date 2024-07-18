@@ -6,8 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.config.annotation.web.headers.FrameOptionsDsl;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,7 +45,7 @@ public class SecurityConfig {
 
                 // logout 설정
                 .logout(logout -> logout.
-                        logoutSuccessUrl("").
+                        logoutSuccessUrl("/").
                         invalidateHttpSession(true))
 
                 // Jwt 관련 설정

@@ -1,11 +1,17 @@
 package KKSC.page.domain.notice.repository.impl;
 
+import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.entity.*;
 import KKSC.page.domain.notice.repository.NoticeBoardRepositoryCustom;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,6 +34,33 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
                 )
                 .fetch();
     }
+
+    @Override
+    public Page<NoticeBoardListResponse> loadNoticeBoardList(Pageable pageable) {
+        List<NoticeBoardListResponse> result = queryFactory
+                .select(Projections.constructor(NoticeBoardListResponse.class,
+                        noticeBoard.title,
+                        noticeBoard.memberName,
+                        new CaseBuilder()
+                                .when(noticeBoard.noticeFiles.isEmpty())
+                                .then(0L)
+                                .otherwise(1L),
+                        noticeBoard.view,
+                        noticeBoard.delYN,
+                        noticeBoard.createdAt
+                ))
+                .from(noticeBoard)
+                .where(noticeBoard.delYN.eq(0L))
+                .orderBy(noticeBoard.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long totalCount = result.size();
+
+        return new PageImpl<>(result, pageable, totalCount);
+    }
+
 
     private BooleanExpression getKeywordQuery(Keyword keyword, String query) {
         return switch (keyword) {

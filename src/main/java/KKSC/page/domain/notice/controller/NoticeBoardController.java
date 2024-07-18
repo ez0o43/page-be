@@ -4,11 +4,17 @@ import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.entity.Keyword;
+import KKSC.page.domain.notice.entity.NoticeBoard;
+import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.global.exception.dto.ResponseVO;
 import KKSC.page.domain.notice.service.NoticeBoardService;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +32,12 @@ public class NoticeBoardController {
     public ResponseVO<List<NoticeBoardListResponse>> noticeList(){
         List<NoticeBoardListResponse> listResponse = noticeBoardService.getBoardList();
         return new ResponseVO<>(listResponse);
+    }
+
+    // 게시글 목록 조회(페이징)
+    @GetMapping("/list/page")
+    public Page<NoticeBoardListResponse> noticeListPage(@PageableDefault Pageable pageable) {
+        return noticeBoardService.getBoardList(pageable);
     }
 
     // 게시글 조회
@@ -55,10 +67,34 @@ public class NoticeBoardController {
         noticeBoardService.delete(id);
         return new ResponseVO<>("Delete success");
     }
+
+    // 특정 키워드로 검색
     @GetMapping("/search")
     public ResponseVO<List<NoticeBoardListResponse>> searchBoards(@RequestParam Keyword keyword, @RequestParam String query) {
         List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(keyword, query);
 
         return new ResponseVO<>(listResponses);
+    }
+
+
+    // test code
+    private final NoticeBoardRepository noticeBoardRepository;
+
+    @GetMapping("/test/list")
+    public Page<NoticeBoardDetailResponse> test(@PageableDefault Pageable pageable) {
+        return noticeBoardRepository.findAll(pageable)
+                .map(entity -> NoticeBoardDetailResponse.fromEntity(entity, null));
+    }
+
+    @PostConstruct
+    public void init() {
+        for (int i = 0; i < 100; ++i) {
+            NoticeBoard noticeBoard = NoticeBoard.builder()
+                    .title("title" + i)
+                    .content("content" + i)
+                    .memberName("member" + i)
+                    .build();
+            noticeBoardRepository.save(noticeBoard);
+        }
     }
 }

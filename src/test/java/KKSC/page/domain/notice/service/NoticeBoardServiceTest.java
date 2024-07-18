@@ -76,6 +76,19 @@ class NoticeBoardServiceTest {
 
     /* 게시물 조회 테스트 케이스 */
     @Test
+    void 페이징_게시물_조회() throws Exception {
+        //given
+        for (int i = 0; i < 100; ++i) {
+            NoticeBoardRequest boardRequest = new NoticeBoardRequest("title" + i, "content" + i, 0L);
+            noticeBoardService.create(boardRequest, "member" + i);
+        }
+
+        //when
+
+        //then
+    }
+
+    @Test
     void 키워드_검색시_키워드포함_게시물만_조회() throws Exception {
         //given
         NoticeBoardRequest boardRequest = new NoticeBoardRequest("title", "content", 0L);

@@ -1,8 +1,14 @@
 package KKSC.page.domain.member.entity;
 
+import KKSC.page.domain.member.dto.MemberRequest;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Profile {
 
     @Id
@@ -11,4 +17,19 @@ public class Profile {
 
     @OneToOne(mappedBy = "profile")
     private Member member;
+
+    /**
+     * photo 추가 예정
+     */
+
+    //자기소개
+    private String intro;
+
+    private String nickname;
+
+    public void update(MemberRequest memberRequest) {
+        this.intro = memberRequest.intro();
+        this.nickname = memberRequest.nickname();
+        //포토 추가예정
+    }
 }

@@ -1,5 +1,6 @@
 package KKSC.page.domain.member.entity;
 
+import KKSC.page.domain.member.dto.MemberRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -83,5 +84,10 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    //추가
+    public void upadatePassword(MemberRequest memberRequest) {
+        this.password = memberRequest.password();
     }
 }

@@ -1,4 +1,4 @@
-package KKSC.page.domain.member.dto;
+package KKSC.page.domain.member.dto.request;
 
 public record ProfileRequest(
         String intro,

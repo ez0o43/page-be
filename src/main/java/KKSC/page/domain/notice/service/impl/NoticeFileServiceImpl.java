@@ -9,29 +9,21 @@ import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeFileService;
 import KKSC.page.global.common.FileCategory;
 import KKSC.page.global.common.FileUploadResponse;
-import KKSC.page.global.common.FileUtil;
+import KKSC.page.global.common.FileUtils;
 import KKSC.page.global.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +33,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     private final HttpServletResponse response;
     private final NoticeFileRepository noticeFileRepository;
     private final NoticeBoardRepository noticeBoardRepository;
-    private final FileUtil fileUtil;
+    private final FileUtils fileUtils;
 
     // 업로드 경로 지정
     @Value(value = "${fileUploadBaseUrl}")
@@ -81,10 +73,9 @@ public class NoticeFileServiceImpl implements NoticeFileService {
 
                     if (!(multipartFile.getOriginalFilename() == null
                             || multipartFile.getOriginalFilename().isEmpty())) {
-                        
-                        
+
                         // 파일 업로드
-                        FileUploadResponse fileUploadResponse = fileUtil.uploadFile(multipartFile,FileCategory.NOTICE_FIlE);
+                        FileUploadResponse fileUploadResponse = fileUtils.uploadFile(multipartFile,FileCategory.NOTICE_FIlE);
                         
                         // DB에 저장
                         NoticeFile noticeFile = NoticeFile.builder()
@@ -129,9 +120,8 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     public Resource downloadFile(Long noticeFileId) {
         NoticeFile noticeFile = noticeFileRepository.findById(noticeFileId)
                 .orElseThrow(() -> new NoticeFileException(ErrorCode.NOT_FOUND_FILE));
-        
 
-       return fileUtil.downloadFile(noticeFile.getNoticeFileBaseUrl(),noticeFile.getNoticeFileName());
+       return fileUtils.downloadFile(noticeFile.getNoticeFileBaseUrl(),noticeFile.getNoticeFileName());
     }
 
     /**
@@ -155,7 +145,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         noticeBoard.deleteFile(noticeFile);
         noticeFileRepository.delete(noticeFile);
 
-        fileUtil.deleteFile(noticeFile.getNoticeFileBaseUrl());
+        fileUtils.deleteFile(noticeFile.getNoticeFileBaseUrl());
 
         // 파일 삭제 후 파일 여부 업데이트
         noticeBoard.updateFileYN();

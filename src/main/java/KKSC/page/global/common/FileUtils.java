@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 
-public class FileUtil {
+public class FileUtils {
 
     // 업로드 경로 지정
     @Value(value = "${fileUploadBaseUrl}")
@@ -54,19 +54,16 @@ public class FileUtil {
             || uploadRequestFile.getOriginalFilename().isEmpty())) {
 
             // File명 uuid 생성
-            String completeuploadPath = uploadPath + "/" + uploadRequestFile.getOriginalFilename() + UUID.randomUUID();
+            String completeUploadPath = uploadPath + "/" + uploadRequestFile.getOriginalFilename() + UUID.randomUUID();
             
-            File uploadFile = new File(completeuploadPath);
+            File uploadFile = new File(completeUploadPath);
             
             uploadRequestFile.transferTo(uploadFile);
-            FileUploadResponse fileUploadResponse = new FileUploadResponse(
-                uploadRequestFile.getOriginalFilename() + UUID.randomUUID(), completeuploadPath);
-            
-            return fileUploadResponse ;
+
+            return new FileUploadResponse(
+                uploadRequestFile.getOriginalFilename() + UUID.randomUUID(), completeUploadPath);
         }
         return null;
-
-
     }
 
     /**

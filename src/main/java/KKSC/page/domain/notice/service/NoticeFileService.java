@@ -12,7 +12,7 @@ public interface NoticeFileService {
 	 * @return 미정
 	 * @since 2024.07.06
 	 */
-	String uploadFile(MultipartHttpServletRequest multipartHttpServletRequest, Long noticeBoardId) throws Exception;
+	String uploadFile(MultipartHttpServletRequest uploadRequestFile, Long noticeBoardId) throws Exception;
 
 	/**
 	 * 공지사항 파일 다운로드

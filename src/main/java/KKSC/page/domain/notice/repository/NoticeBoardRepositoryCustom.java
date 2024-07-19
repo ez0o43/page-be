@@ -11,7 +11,7 @@ import java.util.List;
 public interface NoticeBoardRepositoryCustom {
 
     // 키워드 검색
-    List<NoticeBoard> searchBoardList(Keyword keyword, String query);
+    Page<NoticeBoardListResponse> loadNoticeBoardListByKeyword(Keyword keyword, String query, Pageable pageable);
 
     Page<NoticeBoardListResponse> loadNoticeBoardList(Pageable pageable);
 }

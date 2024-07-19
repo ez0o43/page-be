@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -29,7 +31,7 @@ public class GlobalExceptionHandler {
         return ErrorResponseVO.builder()
                 .name("VALIDATION_ERROR")
                 .errorCode(ex.getStatusCode().value())
-                .message("정확한 규격에 맞춰 입력하세요.").build();
+                .message(Objects.requireNonNull(ex.getFieldError()).getDefaultMessage()).build();
     }
 
     private ErrorResponseVO getErrorResponse(ErrorCode errorCode) {

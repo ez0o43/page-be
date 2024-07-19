@@ -26,14 +26,27 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<NoticeBoard> searchBoardList(Keyword keyword, String query) {
-        return queryFactory
-                .selectFrom(noticeBoard)
+    public Page<NoticeBoardListResponse> loadNoticeBoardListByKeyword(Keyword keyword, String query, Pageable pageable) {
+        List<NoticeBoardListResponse> result = queryFactory
+                .select(Projections.constructor(NoticeBoardListResponse.class,
+                        noticeBoard.title,
+                        noticeBoard.memberName.as("createdBy"),
+                        noticeBoard.fileYN,
+                        noticeBoard.view,
+                        noticeBoard.delYN,
+                        noticeBoard.createdAt
+                )).from(noticeBoard)
                 .where(
                         noticeBoard.delYN.eq(0L),
                         getKeywordQuery(keyword, query)
-                )
+                ).orderBy(noticeBoard.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        long totalCount = result.size();
+
+        return new PageImpl<>(result, pageable, totalCount);
     }
 
     @Override

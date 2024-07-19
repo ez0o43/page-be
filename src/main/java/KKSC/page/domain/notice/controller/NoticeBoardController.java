@@ -29,7 +29,7 @@ public class NoticeBoardController {
 
     // 게시글 목록 조회(페이징)
     @GetMapping("/list")
-    public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(Pageable pageable) {
+    public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(@PageableDefault Pageable pageable) {
         Page<NoticeBoardListResponse> listResponses = noticeBoardService.getBoardList(pageable);
         return new ResponseVO<>(listResponses);
     }
@@ -68,8 +68,11 @@ public class NoticeBoardController {
 
     // 특정 키워드로 검색
     @GetMapping("/search")
-    public ResponseVO<List<NoticeBoardListResponse>> searchBoards(@RequestParam Keyword keyword, @RequestParam String query) {
-        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(keyword, query);
+    public ResponseVO<Page<NoticeBoardListResponse>> searchBoards(
+            @RequestParam(defaultValue = "TITLE") Keyword keyword,
+            @RequestParam String query,
+            @PageableDefault Pageable pageable) {
+        Page<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(keyword, query, pageable);
 
         return new ResponseVO<>(listResponses);
     }

@@ -98,17 +98,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * keyword type에 따라 어디서 %like% 쓸지
      */
     @Override
-    public List<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query) {
-//        List<NoticeBoard> noticeBoards = noticeBoardRepository.searchBoardList(keyword, query);
-//
-//        List<NoticeBoardListResponse> listResponses = new ArrayList<>();
-//
-//        for (NoticeBoard noticeBoard : noticeBoards) {
-//            List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoard.getId());
-//
-//            listResponses.add(NoticeBoardListResponse.fromEntity(noticeBoard, noticeFileResponses));
-//        }
-//        return listResponses;
-        return null;
+    public Page<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query, Pageable pageable) {
+        return noticeBoardRepository.loadNoticeBoardListByKeyword(keyword, query, pageable);
     }
 }

@@ -14,10 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,21 +25,6 @@ import java.util.List;
 public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
-
-    // 게시글 목록 조회(페이징)
-    @GetMapping("/list")
-    public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(@PageableDefault Pageable pageable) {
-        Page<NoticeBoardListResponse> listResponses = noticeBoardService.getBoardList(pageable);
-        return new ResponseVO<>(listResponses);
-    }
-
-    // 게시글 조회
-    @GetMapping("/{id}")
-    public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
-        NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
-
-        return new ResponseVO<>(detailResponse);
-    }
 
     // 게시글 작성
     @PostMapping("/")
@@ -66,12 +50,28 @@ public class NoticeBoardController {
         return new ResponseVO<>("Delete success");
     }
 
+    // 게시글 목록 조회(페이징)
+    @GetMapping("/list")
+    public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<NoticeBoardListResponse> listResponses = noticeBoardService.getBoardList(pageable);
+        return new ResponseVO<>(listResponses);
+    }
+
+    // 게시글 조회
+    @GetMapping("/{id}")
+    public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
+        NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
+
+        return new ResponseVO<>(detailResponse);
+    }
+
     // 특정 키워드로 검색
     @GetMapping("/search")
     public ResponseVO<Page<NoticeBoardListResponse>> searchBoards(
             @RequestParam(defaultValue = "TITLE") Keyword keyword,
             @RequestParam String query,
-            @PageableDefault Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(keyword, query, pageable);
 
         return new ResponseVO<>(listResponses);

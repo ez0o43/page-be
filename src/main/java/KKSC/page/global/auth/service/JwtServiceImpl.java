@@ -1,10 +1,11 @@
-package KKSC.page.domain.member.service;
+package KKSC.page.global.auth.service;
 
 import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.member.exception.MemberException;
 import KKSC.page.domain.member.repository.MemberRepository;
+import KKSC.page.global.exception.ErrorCode;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -41,6 +41,7 @@ public class JwtService {
 
     private final MemberRepository memberRepository;
 
+    @Override
     public String createAccessToken(String email) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
@@ -49,6 +50,7 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secret));
     }
 
+    @Override
     public String createRefreshToken() {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
@@ -56,14 +58,18 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secret));
     }
 
+    @Override
     public void updateRefreshToken(String username, String refreshToken) {
-        Member member = memberRepository.findByEmail(username).orElseThrow();
+        Member member = memberRepository.findByEmail(username)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         member.updateRefreshToken(refreshToken);
     }
 
-    public void destroyRefreshToken(String username, String refreshToken) {
-        Member member = memberRepository.findByEmail(username).orElseThrow();
+    @Override
+    public void destroyRefreshToken(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
         member.destroyRefreshToken();
     }
@@ -71,6 +77,7 @@ public class JwtService {
     /**
      * response set ContentType, Status, AccessToken, RefreshToken
      */
+    @Override
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -80,10 +87,20 @@ public class JwtService {
         log.info("JwtService.sendAccessAndRefreshToken HttpStatus {}", response.getStatus());
     }
 
+    @Override
     public void sendAccessToken(HttpServletResponse response, String accessToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
+    }
+
+    //== 4 ==//
+    public Optional<String> extractUsername(HttpServletRequest request) {
+        String accessToken = extractAccessToken(request)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_ACCESS_TOKEN));
+
+        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret))
+                .build().verify(accessToken).getClaim(USERNAME_CLAIM).asString());
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
@@ -92,37 +109,21 @@ public class JwtService {
                 .map(accessToken -> accessToken.replace(BEARER, ""));
     }
 
-    public Optional<String> extractRefreshToken(HttpServletRequest request) throws IOException, ServletException {
+    public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
-    //== 4 ==//
-    public Optional<String> extractUsername(String accessToken) {
-        try {
-            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret))
-                    .build().verify(accessToken).getClaim(USERNAME_CLAIM).asString());
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return Optional.empty();
-        }
-    }
-
-    public String getUsername(HttpServletRequest request) {
-        String token = extractAccessToken(request).orElseThrow();
-
-        return extractUsername(token).orElseThrow();
-    }
-
-    public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
+    private void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
         response.setHeader(accessHeader, accessToken);
     }
 
-    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
+    private void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
         response.setHeader(refreshHeader, refreshToken);
     }
 
+    /* 토큰 유효성 검증 */
     public boolean isValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secret)).build().verify(token);

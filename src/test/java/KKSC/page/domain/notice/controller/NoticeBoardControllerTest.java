@@ -1,8 +1,8 @@
 package KKSC.page.domain.notice.controller;
 
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
-import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
+import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +34,9 @@ class NoticeBoardControllerTest {
 
     @MockBean
     NoticeBoardService noticeBoardService;
+
+    @MockBean
+    NoticeBoardRepository noticeBoardRepository;
 
 //    @Test
 //    void 게시글_목록_조회() throws Exception {

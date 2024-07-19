@@ -53,7 +53,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
      * @throws IllegalStateException
      */
     @Override
-    public String uploadFile(MultipartHttpServletRequest multipartHttpServletRequest, Long noticeBoardId) throws Exception, IOException {
+    public String uploadFile(MultipartHttpServletRequest uploadRequestFile, Long noticeBoardId) throws Exception, IOException {
         /*
          * 경로,파일명,파일사이즈,파일타입 빌더패턴으로 묶어서 정보 DB에 저장 후 서버에 파일 업로드
          */
@@ -70,16 +70,16 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         int cnt = 0;
 
         // 전체 NULL 체크
-        if (!ObjectUtils.isEmpty(multipartHttpServletRequest)) {
+        if (!ObjectUtils.isEmpty(uploadRequestFile)) {
 
-            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+            Iterator<String> iterator = uploadRequestFile.getFileNames();
             String name;
 
             while (iterator.hasNext()) {
                 total++;
                 name = iterator.next();
                 
-                List<MultipartFile> list = multipartHttpServletRequest.getFiles(name);
+                List<MultipartFile> list = uploadRequestFile.getFiles(name);
                 for (MultipartFile multipartFile : list) {
 
                     if (!(multipartFile.getOriginalFilename() == null

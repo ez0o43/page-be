@@ -1,9 +1,11 @@
-package KKSC.page.domain.member.dto.request;
+package KKSC.page.domain.member.dto.response;
+
+import KKSC.page.domain.member.entity.Member;
 import KKSC.page.domain.member.entity.Permission;
 
-public record MemberRequest(
+public record MemberResponse(
+        Long id,
         String email,
-        String password,
         String username,
         String studentId,
         String intro,
@@ -11,6 +13,6 @@ public record MemberRequest(
         Permission permission
 ) {
     /**
-     * toEntity 추가 예정
+     * fromEntity 추가예정
      */
 }

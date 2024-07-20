@@ -3,13 +3,7 @@ package KKSC.page.domain.member.entity;
 import KKSC.page.domain.member.dto.request.MemberRequest;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter

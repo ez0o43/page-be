@@ -1,15 +1,9 @@
 package KKSC.page.domain.member.entity;
 
-import KKSC.page.domain.member.dto.MemberRequest;
+import KKSC.page.domain.member.dto.request.MemberRequest;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter
@@ -28,7 +22,7 @@ public class Member {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    //    @Column(name = "password", nullable = false)
+    //@Column(name = "password", nullable = false)
     private String password;
 
     //    @Column(name = "username", nullable = false, unique = true)
@@ -41,7 +35,7 @@ public class Member {
     private String studentId;
 
     @Enumerated(EnumType.STRING)
-//    @Column(name = "permission", nullable = false)
+    //    @Column(name = "permission", nullable = false)
     private Permission permission;
 
     private String refreshToken;

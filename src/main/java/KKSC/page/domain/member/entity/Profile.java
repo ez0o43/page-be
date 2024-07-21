@@ -1,6 +1,6 @@
 package KKSC.page.domain.member.entity;
 
-import KKSC.page.domain.member.dto.MemberRequest;
+import KKSC.page.domain.member.dto.request.MemberRequest;
 import jakarta.persistence.*;
 import lombok.*;
 

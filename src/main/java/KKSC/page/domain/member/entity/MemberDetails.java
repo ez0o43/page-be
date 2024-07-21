@@ -20,7 +20,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUsername();
+        return member.getEmail();
     }
 
     @Override
@@ -46,5 +46,13 @@ public class MemberDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "email='" + member.getEmail() + '\'' +
+                ", username='" + member.getUsername() + '\'' +
+                ", password='" + member.getPassword() + "}";
     }
 }

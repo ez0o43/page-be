@@ -39,7 +39,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-    private final String NO_CHECK_URL = "/login";
+    private final String NO_CHECK_URL = "/member/login";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -49,6 +49,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
         log.info("JwtAuthenticationProcessingFilter.doFilterInternal 진입");
         log.info("request URL = {}", request.getRequestURL());
+        log.info("request Authorization = {}", request.getHeaderNames().toString());
+
 
         // request 에서 refreshToken 추출
         String refreshToken = jwtService.extractRefreshToken(request).filter(jwtService::isValid).orElse(null);

@@ -1,5 +1,7 @@
 package KKSC.page.domain.member.dto.request;
-import KKSC.page.domain.member.entity.Permission;
+
+import KKSC.page.domain.member.entity.Member;
+import KKSC.page.domain.member.entity.Profile;
 
 public record MemberRequest(
         String email,
@@ -7,10 +9,14 @@ public record MemberRequest(
         String username,
         String studentId,
         String intro,
-        String nickname,
-        Permission permission
+        String nickname
 ) {
-    /**
-     * toEntity 추가 예정
-     */
+    public Member toEntity() {
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .username(username)
+                .studentId(studentId)
+                .build();
+    }
 }

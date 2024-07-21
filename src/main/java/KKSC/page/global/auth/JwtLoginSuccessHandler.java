@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -27,15 +28,16 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken();
 
-        log.info("response Status before {}", response.getStatus());
-
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
         memberRepository.findByEmail(username).ifPresent(
                 member -> member.updateRefreshToken(refreshToken)
         );
 
-        log.info("{} 로그인에 성공합니다.", username);
+        log.info("{} 로그인에 성공합니다.", authentication.getPrincipal());
+
+        // SecurityContextHolder에 인증 정보 저장
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String extractUsername(Authentication authentication) {

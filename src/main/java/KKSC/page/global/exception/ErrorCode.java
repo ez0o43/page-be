@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum ErrorCode {
 
     /* 사용자 */
+    ALREADY_EXIST_MEMBER(00, "이미 존재하는 사용자입니다."),
     NOT_FOUND_MEMBER(00, "사용자를 찾을 수 없습니다."),
+    MISMATCH_PASSWORD(00, "비밀번호가 일치하지 않습니다."),
 
     /* 게시판 & 공지 */
     NOT_FOUND_TITLE(00, "제목을 입력하세요."),

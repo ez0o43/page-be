@@ -4,15 +4,15 @@ import KKSC.page.domain.member.entity.Member;
 import KKSC.page.domain.member.entity.Permission;
 
 public record MemberResponse(
-        Long id,
         String email,
         String username,
-        String studentId,
-        String intro,
-        String nickname,
-        Permission permission
+        String studentId
 ) {
-    /**
-     * fromEntity 추가예정
-     */
+    public static MemberResponse from(Member member) {
+        return new MemberResponse(
+                member.getEmail(),
+                member.getUsername(),
+                member.getStudentId()
+        );
+    }
 }

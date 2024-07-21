@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
@@ -84,7 +84,7 @@ public class JwtServiceImpl implements JwtService {
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
 
-        log.info("JwtService.sendAccessAndRefreshToken HttpStatus {}", response.getStatus());
+        log.info("JwtService.sendAccessAndRefreshToken {}", accessToken);
     }
 
     @Override

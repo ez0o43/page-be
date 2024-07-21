@@ -1,14 +1,18 @@
 package KKSC.page.domain.member.service;
 
+import KKSC.page.domain.member.dto.request.MemberLoginRequest;
 import KKSC.page.domain.member.dto.request.MemberRequest;
 import KKSC.page.domain.member.dto.response.MemberResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface MemberService {
 
     //회원가입
-    void register(MemberRequest memberRequest);
+    Long register(MemberRequest memberRequest);
+
+    String login(MemberLoginRequest memberLoginRequest, HttpServletResponse response);
 
     //회원탈퇴
     void retire(String email);

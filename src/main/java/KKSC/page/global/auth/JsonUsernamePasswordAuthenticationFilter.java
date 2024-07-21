@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login";
+    private static final String DEFAULT_LOGIN_REQUEST_URL = "/member/login";
 
     private static final String HTTP_METHOD = "POST";    //HTTP 메서드의 방식은 POST 이다.
 
@@ -26,8 +26,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 
     private final ObjectMapper objectMapper;
 
-    private static final String USERNAME_KEY="email";
-    private static final String PASSWORD_KEY="password";
+    private static final String USERNAME_KEY = "email";
+    private static final String PASSWORD_KEY = "password";
 
 
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =

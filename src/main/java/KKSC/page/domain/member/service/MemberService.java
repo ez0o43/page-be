@@ -12,6 +12,7 @@ public interface MemberService {
     //회원가입
     Long register(MemberRequest memberRequest);
 
+    //로그인
     String login(MemberLoginRequest memberLoginRequest, HttpServletResponse response);
 
     //회원탈퇴

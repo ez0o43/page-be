@@ -1,12 +1,9 @@
 package KKSC.page.domain.member.entity;
 
 import KKSC.page.domain.member.dto.request.MemberRequest;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-
 
 @Entity
 @Getter
@@ -19,17 +16,16 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private Long userId;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @Column(name = "password", length = 100, nullable = false)
-    @JsonIgnore
+    //@Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "username", length = 50, unique = true)
+    //    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     //    @Column(name = "email", nullable = false, unique = true)
@@ -37,9 +33,6 @@ public class Member {
 
     //    @Column(name = "student_id", nullable = false, unique = true)
     private String studentId;
-
-    @Column(name = "nickname", length = 50)
-    private String nickname;
 
     @Enumerated(EnumType.STRING)
     //    @Column(name = "permission", nullable = false)
@@ -62,6 +55,4 @@ public class Member {
     public void destroyRefreshToken() {
         this.refreshToken = null;
     }
-
-
 }

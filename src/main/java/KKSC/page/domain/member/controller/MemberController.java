@@ -33,6 +33,7 @@ public class MemberController {
         return new ResponseVO<>("가입 완료. 사용자 아이디 : " + createdId);
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseVO<String> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest,
                                     HttpServletResponse response) {

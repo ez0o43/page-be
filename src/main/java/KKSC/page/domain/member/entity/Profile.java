@@ -25,6 +25,7 @@ public class Profile {
     //자기소개
     private String intro;
 
+    @Column(name = "nickname", length = 50)
     private String nickname;
 
     public void update(MemberRequest memberRequest) {

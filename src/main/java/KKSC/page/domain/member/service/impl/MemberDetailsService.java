@@ -26,4 +26,6 @@ public class MemberDetailsService implements UserDetailsService {
         log.info("DB에서 가져온 유저정보 username = {}, password = {}", member.getEmail(), member.getPassword());
         return new MemberDetails(member);
     }
+
+
 }

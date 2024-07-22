@@ -1,7 +1,6 @@
 package KKSC.page.domain.member.dto.request;
 
 import KKSC.page.domain.member.entity.Member;
-import KKSC.page.domain.member.entity.Profile;
 
 public record MemberRequest(
         String email,

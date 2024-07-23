@@ -1,7 +1,6 @@
 package KKSC.page.domain.member.dto.response;
 
 import KKSC.page.domain.member.entity.Member;
-import KKSC.page.domain.member.entity.Permission;
 
 public record MemberResponse(
         String email,

@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -34,6 +33,7 @@ public class MemberController {
         return new ResponseVO<>("가입 완료. 사용자 아이디 : " + createdId);
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseVO<String> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest,
                                     HttpServletResponse response) {

@@ -49,8 +49,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         }
         log.info("JwtAuthenticationProcessingFilter.doFilterInternal 진입");
         log.info("request URL = {}", request.getRequestURL());
-        log.info("request Authorization = {}", request.getHeaderNames().toString());
-
+        log.info("request Authorization = {}", request.getHeader("Authorization"));
 
         // request 에서 refreshToken 추출
         String refreshToken = jwtService.extractRefreshToken(request).filter(jwtService::isValid).orElse(null);

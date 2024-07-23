@@ -6,6 +6,7 @@ import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.global.exception.ErrorCode;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
@@ -95,12 +96,12 @@ public class JwtServiceImpl implements JwtService {
     }
 
     //== 4 ==//
-    public Optional<String> extractUsername(HttpServletRequest request) {
+    public Optional<String> extractUsername(HttpServletRequest request) throws TokenExpiredException{
         String accessToken = extractAccessToken(request)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_ACCESS_TOKEN));
 
         return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret))
-                .build().verify(accessToken).getClaim(USERNAME_CLAIM).asString());
+                    .build().verify(accessToken).getClaim(USERNAME_CLAIM).asString());
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -38,6 +39,9 @@ public class JwtLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // SecurityContextHolder에 인증 정보 저장
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        PrintWriter writer = response.getWriter();
+        writer.write("success login. AccessToken: " + accessToken);
     }
 
     private String extractUsername(Authentication authentication) {

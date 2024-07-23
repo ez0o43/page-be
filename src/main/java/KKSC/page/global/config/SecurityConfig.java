@@ -1,13 +1,14 @@
 package KKSC.page.global.config;
 
 import KKSC.page.domain.member.repository.MemberRepository;
-import KKSC.page.global.auth.service.JwtService;
 import KKSC.page.domain.member.service.impl.MemberDetailsService;
 import KKSC.page.global.auth.*;
+import KKSC.page.global.auth.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -57,7 +58,10 @@ public class SecurityConfig {
 
                 // 권한 url 설정
                 .authorizeHttpRequests(req -> req.
-                        requestMatchers("/", "/member/").permitAll().
+                        requestMatchers("/").permitAll().
+                        requestMatchers(HttpMethod.POST, "/member/").permitAll().
+                        requestMatchers(HttpMethod.GET, "/notice/list", "/notice/search").permitAll().
+                        requestMatchers(HttpMethod.GET, "/notice/").permitAll().
                         requestMatchers("/swagger-ui/**").permitAll().
                         requestMatchers("/v3/api-docs/**").permitAll().
                         anyRequest().authenticated())

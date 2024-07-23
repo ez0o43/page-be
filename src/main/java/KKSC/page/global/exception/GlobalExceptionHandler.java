@@ -4,8 +4,10 @@ import KKSC.page.domain.member.exception.MemberException;
 import KKSC.page.domain.notice.exeption.NoticeBoardException;
 import KKSC.page.domain.notice.exeption.NoticeFileException;
 import KKSC.page.global.exception.dto.ErrorResponseVO;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Objects;
@@ -32,6 +34,15 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ex.getErrorCode();
 
         return getErrorResponse(errorCode);
+    }
+
+    @ResponseStatus(org.springframework.http.HttpStatus.FORBIDDEN)
+    @ExceptionHandler(TokenExpiredException.class)
+    public ErrorResponseVO handleTokenExpiredException(TokenExpiredException ex) {
+        return ErrorResponseVO.builder()
+                .name(ErrorCode.EXPIRED_ACCESS_TOKEN.name())
+                .errorCode(ErrorCode.EXPIRED_ACCESS_TOKEN.getErrorCode())
+                .message(ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage()).build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

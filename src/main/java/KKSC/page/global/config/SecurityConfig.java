@@ -140,10 +140,8 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        //role hierarchy 설정 (관리자 > 일반회원 > 준회원)
-        roleHierarchy.setHierarchy("permission_level0 > permission_level1 > permission_level2");
-        return roleHierarchy;
+        // RoleHierarchyImpl의 fromHierarchy() static 메서드를 사용하여 역할 계층을 설정
+        return RoleHierarchyImpl.fromHierarchy("permission_level0 > permission_level1 > permission_level2");
     }
 
     /*

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -61,6 +60,11 @@ public class SecurityConfig {
 
                 // 권한 url 설정
                 .authorizeHttpRequests(req -> req.
+                        requestMatchers("/login","/register","/profile").permitAll().
+                        requestMatchers("/profile_edit").hasRole("permission_level0").
+                        requestMatchers("/board-idea","/board-notice","/board-portfolio","/board-view").permitAll().
+                        requestMatchers("/board-form").hasRole("permission_level0").
+                        requestMatchers("/calendar","/part-introduction").permitAll().
                         requestMatchers("/").permitAll().
                         requestMatchers(HttpMethod.POST, "/member/").permitAll().
                         requestMatchers(HttpMethod.GET, "/notice/list", "/notice/search").permitAll().
@@ -68,6 +72,8 @@ public class SecurityConfig {
                         requestMatchers("/swagger-ui/**").permitAll().
                         requestMatchers("/v3/api-docs/**").permitAll().
                         anyRequest().authenticated())
+
+
 
                 // logout 설정
                 .logout(logout -> logout.

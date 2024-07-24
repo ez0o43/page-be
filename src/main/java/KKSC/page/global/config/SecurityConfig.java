@@ -22,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -145,11 +146,15 @@ public class SecurityConfig {
         return roleHierarchy;
     }
 
+    /*
+     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을
+     * 평가할 때 역할 계층을 반영
+     */
     @Bean
-    public RoleHierarchyVoter roleVoter() {
-        return new RoleHierarchyVoter(roleHierarchy());
-        //roleHierarchy() 메서드를 호출하여 위에서 생성한 RoleHierarchyImpl 빈을 주입
+    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
+        return expressionHandler;
     }
-
 
 }

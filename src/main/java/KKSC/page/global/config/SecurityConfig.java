@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -134,4 +135,13 @@ public class SecurityConfig {
         filter.setAuthenticationFailureHandler(loginFailureHandler());
         return filter;
     }
+
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        //role hierarchy 설정 (관리자 > 일반회원 > 준회원)
+        roleHierarchy.setHierarchy("permission_level0 > permission_level1 > permission_level2");
+        return roleHierarchy;
+    }
+
 }

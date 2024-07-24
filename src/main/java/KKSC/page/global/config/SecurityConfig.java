@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -143,5 +144,12 @@ public class SecurityConfig {
         roleHierarchy.setHierarchy("permission_level0 > permission_level1 > permission_level2");
         return roleHierarchy;
     }
+
+    @Bean
+    public RoleHierarchyVoter roleVoter() {
+        return new RoleHierarchyVoter(roleHierarchy());
+        //roleHierarchy() 메서드를 호출하여 위에서 생성한 RoleHierarchyImpl 빈을 주입
+    }
+
 
 }

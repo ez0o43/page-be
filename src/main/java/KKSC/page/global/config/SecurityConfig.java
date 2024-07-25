@@ -21,6 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -59,6 +60,11 @@ public class SecurityConfig {
 
                 // 권한 url 설정
                 .authorizeHttpRequests(req -> req.
+                        requestMatchers("/login","/register","/profile").permitAll().
+                        requestMatchers("/profile_edit").hasRole("permission_level0").
+                        requestMatchers("/board-idea","/board-notice","/board-portfolio","/board-view").permitAll().
+                        requestMatchers("/board-form").hasRole("permission_level0").
+                        requestMatchers("/calendar","/part-introduction").permitAll().
                         requestMatchers("/").permitAll().
                         requestMatchers(HttpMethod.POST, "/member/").permitAll().
                         requestMatchers(HttpMethod.GET, "/notice/list", "/notice/search").permitAll().
@@ -66,6 +72,8 @@ public class SecurityConfig {
                         requestMatchers("/swagger-ui/**").permitAll().
                         requestMatchers("/v3/api-docs/**").permitAll().
                         anyRequest().authenticated())
+
+
 
                 // logout 설정
                 .logout(logout -> logout.
@@ -138,10 +146,19 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        //role hierarchy 설정 (관리자 > 일반회원 > 준회원)
-        roleHierarchy.setHierarchy("permission_level0 > permission_level1 > permission_level2");
-        return roleHierarchy;
+        // RoleHierarchyImpl의 fromHierarchy() static 메서드를 사용하여 역할 계층을 설정
+        return RoleHierarchyImpl.fromHierarchy("permission_level0 > permission_level1 > permission_level2");
+    }
+
+    /*
+     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을
+     * 평가할 때 역할 계층을 반영
+     */
+    @Bean
+    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
+        return expressionHandler;
     }
 
 }

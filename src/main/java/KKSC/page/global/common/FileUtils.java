@@ -36,8 +36,7 @@ public class FileUtils {
      * 파일 업로드
      * @param uploadRequestFile : 파일
      * @param fileCategory : Member / Number / Board 지정
-     * @param completeuploadPath : 업로드 주소
-     * @return 업로드 URL
+     * @return FileUploadResponse ( 업로드 URL , 업로드 파일명)
      * @since 2024.07.19
      * @version 0.1
      * @throws IOException

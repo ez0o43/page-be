@@ -6,11 +6,11 @@ import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.dto.NoticeFileResponse;
 import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
-import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.domain.notice.exeption.NoticeBoardException;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.repository.NoticeFileRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
+import KKSC.page.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -100,5 +98,12 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     @Override
     public Page<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query, Pageable pageable) {
         return noticeBoardRepository.loadNoticeBoardListByKeyword(keyword, query, pageable);
+    }
+
+    @Override
+    public void countUpView(Long noticeBoardId) {
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
+                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+        noticeBoard.viewUp(noticeBoard);
     }
 }

@@ -25,7 +25,7 @@ public class Participant extends BaseTimeEntity {
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 
-    @OneToOne(mappedBy = "member")
-    private List<Member> members;
+//    @OneToOne(mappedBy = "member")
+//    private Member members;
 
 }

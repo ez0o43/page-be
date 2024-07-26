@@ -1,5 +1,6 @@
 package KKSC.page.domain.calendar.entity;
 
+import KKSC.page.domain.calendar.dto.CalendarRequest;
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,8 +27,8 @@ public class Calendar extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private Category category;
 
-    @OneToMany(mappedBy = "participants")
-    private List<Participant> participants;
+//    @OneToMany(mappedBy = "participants")
+//    private List<Participant> participants;
 
     private Long numberPeople;
     private void addPerson(){
@@ -43,5 +44,4 @@ public class Calendar extends BaseTimeEntity {
         this.endDate = calendarrequest.endDate();
         this.detail = calendarrequest.detail();
     }
-
 }

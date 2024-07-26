@@ -1,6 +1,5 @@
 package KKSC.page.domain.member.controller;
 
-import KKSC.page.domain.member.dto.request.MemberLoginRequest;
 import KKSC.page.domain.member.dto.request.MemberRequest;
 import KKSC.page.domain.member.dto.response.MemberResponse;
 import KKSC.page.domain.member.exception.MemberException;
@@ -9,13 +8,10 @@ import KKSC.page.global.auth.service.JwtService;
 import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.global.exception.dto.ResponseVO;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 
 @Slf4j
 @RestController
@@ -53,17 +49,7 @@ public class MemberController {
         String email = jwtService.extractUsername(request)
                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
 
-        log.info("accessToken = {}", request.getHeader("Authorization"));
-
         MemberResponse response = memberService.getMemberProfile(email);
         return new ResponseVO<>(response);
-    }
-
-    @GetMapping("/test")
-    public String test(Authentication authentication) {
-        String email = authentication.getName();
-        MemberResponse member = memberService.getMemberProfile(email);
-
-        return member.toString();
     }
 }

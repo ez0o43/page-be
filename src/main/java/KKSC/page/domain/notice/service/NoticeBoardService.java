@@ -4,10 +4,9 @@ import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
 import KKSC.page.domain.notice.entity.Keyword;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface NoticeBoardService {
 
@@ -22,4 +21,8 @@ public interface NoticeBoardService {
     NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId); /* 글 선택 시 보여줄 상세 글 */
 
     Page<NoticeBoardListResponse> searchBoardList(Keyword keyword, String query, Pageable pageable); /* 작성일 순, 작성자가 포함된 글 불러오기 */
+
+    void countUpView(Long noticeBoardId);
+
+    void readNotice(Long noticeBoardId, String cookieName, String cookieValue, HttpServletResponse response);
 }

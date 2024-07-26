@@ -107,8 +107,11 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
                 .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
         noticeBoard.viewUp();
+
+        noticeBoardRepository.save(noticeBoard);
     }
 
+    @Override
     public void readNotice(Long noticeBoardId, String cookieName, String cookieValue, HttpServletResponse response) {
         String noticeBoardValue = "[" + noticeBoardId + "]";
 

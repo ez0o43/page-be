@@ -66,7 +66,7 @@ public class NoticeBoardController {
     }
 
     // 게시글 단건 조회
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public ResponseVO<NoticeBoardDetailResponse> noticeDetail(@PathVariable("id") Long id,
                                                               HttpServletRequest request, HttpServletResponse response) {
         // 현재 로그인한 사용자 정보 가져오기
@@ -108,22 +108,5 @@ public class NoticeBoardController {
             }
         }
         return null;
-    }
-
-    // test code
-    private final NoticeBoardRepository noticeBoardRepository;
-
-    @PostConstruct
-    public void init() {
-        for (int i = 0; i < 100; ++i) {
-            NoticeBoard noticeBoard = NoticeBoard.builder()
-                    .title("title" + i)
-                    .content("content" + i)
-                    .memberName("member" + i)
-                    .delYN(0L)
-                    .view(0L)
-                    .build();
-            noticeBoardRepository.save(noticeBoard);
-        }
     }
 }

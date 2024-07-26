@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum FileCategory {
 
-    NOTICE_FIlE("Notice_file"),
+    NOTICE_FILE("Notice_file"),
     MEMBER("Member_file"),
     BOARD("Board_file");
 

@@ -42,7 +42,7 @@ public class NoticeBoard extends BaseTimeEntity {
         this.fixed = noticeBoardRequest.fixed();
     }
 
-    public void viewUp(NoticeBoard noticeBoard) {
+    public void viewUp() {
         this.view++;
     }
 

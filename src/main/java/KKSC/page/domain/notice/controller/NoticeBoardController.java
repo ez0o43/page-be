@@ -1,5 +1,6 @@
 package KKSC.page.domain.notice.controller;
 
+import KKSC.page.domain.member.exception.MemberException;
 import KKSC.page.domain.notice.dto.NoticeBoardDetailResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardListResponse;
 import KKSC.page.domain.notice.dto.NoticeBoardRequest;
@@ -7,6 +8,8 @@ import KKSC.page.domain.notice.entity.Keyword;
 import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
+import KKSC.page.global.auth.service.JwtService;
+import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.global.exception.dto.ResponseVO;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
@@ -19,9 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
+    private final JwtService jwtService;
 
     // 게시글 작성
     @PostMapping("/")
@@ -64,11 +65,25 @@ public class NoticeBoardController {
         return new ResponseVO<>(listResponses);
     }
 
-    // 게시글 조회
-    @GetMapping("/{id}")
-    public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
-        NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
+    // 게시글 단건 조회
+    @GetMapping("/detail/{id}")
+    public ResponseVO<NoticeBoardDetailResponse> noticeDetail(@PathVariable("id") Long id,
+                                                              HttpServletRequest request, HttpServletResponse response) {
+        // 현재 로그인한 사용자 정보 가져오기
+        String username = jwtService.extractUsername(request)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_ACCESS_TOKEN));
 
+        String newUsername = username.replaceAll("[@.]", "_");
+        String cookieName = "noticeBoardView_" + newUsername;
+
+        // 쿠키 값 가져오기
+        String noticeBoardViewCookie = getCookieValue(request, cookieName);
+
+        // 조회수 증가 + 쿠키 값 추가
+        noticeBoardService.readNotice(id, cookieName, noticeBoardViewCookie, response);
+
+        // 글 조회
+        NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
         return new ResponseVO<>(detailResponse);
     }
 
@@ -83,15 +98,20 @@ public class NoticeBoardController {
         return new ResponseVO<>(listResponses);
     }
 
+    private String getCookieValue(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (cookieName.equals(c.getName())) {
+                    return c.getValue();
+                }
+            }
+        }
+        return null;
+    }
 
     // test code
     private final NoticeBoardRepository noticeBoardRepository;
-
-    @GetMapping("/test/list")
-    public Page<NoticeBoardDetailResponse> test(@PageableDefault Pageable pageable) {
-        return noticeBoardRepository.findAll(pageable)
-                .map(entity -> NoticeBoardDetailResponse.fromEntity(entity, null));
-    }
 
     @PostConstruct
     public void init() {
@@ -105,62 +125,5 @@ public class NoticeBoardController {
                     .build();
             noticeBoardRepository.save(noticeBoard);
         }
-    }
-
-    /**
-     * 게시글 조회
-     */
-    @GetMapping("/detail/{id}")
-    public ResponseVO<NoticeBoardDetailResponse> noticeDetail(@PathVariable("id") Long id,
-                                                              HttpServletRequest request, HttpServletResponse response) {
-        // 현재 로그인한 사용자 정보 가져오기 - 지금은 username을 가져왔는데 학번가져오는게 더 좋을 듯함
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = extractUsername(authentication);
-        String newUsername = username.replaceAll("[@.]", "_");
-        String cookieName = "noticeBoardView_" + newUsername;
-
-        // 쿠키 값 가져오기
-        String noticeBoardViewCookie = getCookieValue(request, cookieName);
-        readNotice(id, cookieName, noticeBoardViewCookie, response);
-        NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
-        return new ResponseVO<>(detailResponse);
-    }
-
-    private String extractUsername(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
-    }
-
-    private void readNotice(Long noticeBoardId, String cookieName, String cookieValue, HttpServletResponse response) {
-        String noticeBoardIdStr = "[" + noticeBoardId + "]";
-
-        if (cookieValue == null) { // cookieValue 없으면 새로운 쿠키
-            noticeBoardService.countUpView(noticeBoardId); // 조회수 +1
-            Cookie newCookie = new Cookie(cookieName, noticeBoardIdStr);
-            newCookie.setPath("/notice");
-            newCookie.setMaxAge(60 * 60 * 24); // 수명: 24시간
-            response.addCookie(newCookie);
-        } else { // cookieValue 있으면 기존 쿠키 -> 기존 쿠키값에 조회한 게시글 id 추가
-            if (!cookieValue.contains(noticeBoardIdStr)) {
-                noticeBoardService.countUpView(noticeBoardId); // 조회수 +1
-                String newValue = cookieValue + noticeBoardIdStr;
-                Cookie oldCookie = new Cookie(cookieName, newValue);
-                oldCookie.setPath("/notice");
-                oldCookie.setMaxAge(60 * 60 * 24); // 수명: 24시간
-                response.addCookie(oldCookie);
-            }
-        }
-    }
-
-    private String getCookieValue(HttpServletRequest request, String cookieName) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (cookieName.equals(c.getName())) {
-                    return c.getValue();
-                }
-            }
-        }
-        return null;
     }
 }

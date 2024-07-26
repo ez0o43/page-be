@@ -9,6 +9,7 @@ import KKSC.page.domain.notice.entity.Keyword;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -97,7 +98,8 @@ class NoticeBoardServiceTest {
         //when
         noticeBoardService.create(boardRequest, "Kim");
         noticeBoardService.create(secondRequest, "Kim");
-        List<NoticeBoardListResponse> listResponses = noticeBoardService.searchBoardList(Keyword.TITLE, "title");
+        Page<NoticeBoardListResponse> listResponsePage = noticeBoardService.searchBoardList(Keyword.TITLE, "title", null);
+        List<NoticeBoardListResponse> listResponses = listResponsePage.getContent();
 
         //then
         assertEquals(1, listResponses.size()); // 2개가 입력됬어도 title이 포함된 글은 1개

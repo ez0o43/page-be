@@ -1,14 +1,11 @@
 package KKSC.page.domain.calendar.entity;
 
-import KKSC.page.domain.member.entity.Member;
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -22,10 +19,8 @@ public class Participant extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
+    @JoinColumn(name = "event_id")
+    private Event event;
 
-    @OneToOne(mappedBy = "member")
-    private List<Member> members;
-
+    private String name;
 }

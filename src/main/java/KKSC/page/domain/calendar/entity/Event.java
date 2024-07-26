@@ -1,6 +1,6 @@
 package KKSC.page.domain.calendar.entity;
 
-import KKSC.page.domain.calendar.dto.CalendarRequest;
+import KKSC.page.domain.member.entity.Member;
 import KKSC.page.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,32 +16,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Calendar extends BaseTimeEntity {
+public class Event extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "calendar_id")
     private Long id;
+
+    @OneToMany(mappedBy = "event")
+    private List<Participant> participants;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String title;
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
 
-//    @OneToMany(mappedBy = "participants")
-//    private List<Participant> participants;
-
-    private Long numberPeople;
-    private void addPerson(){
-        numberPeople++;
-    }
+    private Long maxParticipant;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String detail;
 
-    private void update(CalendarRequest calendarrequest){
-        this.startDate = calendarrequest.startDate();
-        this.endDate = calendarrequest.endDate();
-        this.detail = calendarrequest.detail();
-    }
+//    private void update(CalendarRequest calendarrequest){
+//        this.startDate = calendarrequest.startDate();
+//        this.endDate = calendarrequest.endDate();
+//        this.detail = calendarrequest.detail();
+//    }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 public class Event extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "calendar_id")
+    @Column(name = "event_id")
     private Long id;
 
     @OneToMany(mappedBy = "event")
@@ -40,9 +40,12 @@ public class Event extends BaseTimeEntity {
     private LocalDateTime endDate;
     private String detail;
 
-//    private void update(CalendarRequest calendarrequest){
-//        this.startDate = calendarrequest.startDate();
-//        this.endDate = calendarrequest.endDate();
-//        this.detail = calendarrequest.detail();
-//    }
+    public void update(String title, String detail, Category category, LocalDateTime startDate, LocalDateTime endDate, Long maxParticipant) {
+        this.title = title;
+        this.detail = detail;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.maxParticipant = maxParticipant;
+    }
 }

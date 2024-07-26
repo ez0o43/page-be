@@ -56,7 +56,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
         noticeBoard.update(noticeBoardRequest);
 
-        return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);
+        return NoticeBoardDetailResponse.from(noticeBoard, noticeFileResponses);
     }
 
     /*
@@ -90,7 +90,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
         List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
 
-        return NoticeBoardDetailResponse.fromEntity(noticeBoard, noticeFileResponses);
+        return NoticeBoardDetailResponse.from(noticeBoard, noticeFileResponses);
     }
 
     /*

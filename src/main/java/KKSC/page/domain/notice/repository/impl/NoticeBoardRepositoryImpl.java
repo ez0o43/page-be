@@ -88,7 +88,7 @@ public class NoticeBoardRepositoryImpl implements NoticeBoardRepositoryCustom {
     private List<OrderSpecifier<?>> getOrderSpecifier(Pageable pageable) {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
 
-        if (pageable.getSort().isEmpty()) return null;
+        if (pageable.getSort().isEmpty()) return orders;
 
         for (Sort.Order order : pageable.getSort()) {
             Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;

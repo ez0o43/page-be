@@ -38,8 +38,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     @Override
     public Long create(NoticeBoardRequest noticeBoardRequest, String memberName) {
         NoticeBoard noticeBoard = noticeBoardRequest.toEntity(memberName);
-        log.info("noticeBoard = {}", noticeBoard);
-
         return noticeBoardRepository.save(noticeBoard).getId();
     }
 
@@ -87,6 +85,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     public NoticeBoardDetailResponse getBoardDetail(Long noticeBoardId) {
         NoticeBoard noticeBoard = noticeBoardRepository.findById(noticeBoardId)
                 .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+
+        if (noticeBoard.getDelYN() == 1L) {
+            throw new NoticeBoardException(ErrorCode.ALREADY_DELETED);
+        }
 
         List<NoticeFileResponse> noticeFileResponses = noticeFileRepository.findNoticeFilesByNoticeBoardId(noticeBoardId);
 

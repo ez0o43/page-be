@@ -22,6 +22,6 @@ public interface EventService {
     Long joinSchedule();
 
     // 일정 참가 취소
-    Long cancleSchedule ();
+    Long cancelSchedule ();
 
 }

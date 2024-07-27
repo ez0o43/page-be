@@ -8,9 +8,10 @@ Spring boot를 사용한 KKSC 동아리 홈페이지 제작 프로젝트
 
 ## 개발 환경
 
-- Gradle - Groovy
+- Gradle - Groovy | Version 8.8
 - Java 17, Jar
 - Spring Boot 3.3.1
+- Packaging Jar
 
 ## 사용 기술 스택
 

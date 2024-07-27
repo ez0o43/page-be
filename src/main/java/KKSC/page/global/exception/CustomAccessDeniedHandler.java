@@ -1,4 +1,4 @@
-package KKSC.page.global.config;
+package KKSC.page.global.exception;
 
 
 import org.springframework.security.access.AccessDeniedException;

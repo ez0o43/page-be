@@ -38,6 +38,8 @@ public class SecurityConfig {
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler; //커스텀 접근 거부 핸들러
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -76,7 +78,6 @@ public class SecurityConfig {
                         anyRequest().authenticated())
 
 
-
                 // logout 설정
                 .logout(logout -> logout.
                         logoutSuccessUrl("/").
@@ -86,6 +87,12 @@ public class SecurityConfig {
                 .exceptionHandling(req -> req.authenticationEntryPoint(jwtAuthenticationEntryPoint()))
                 .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class)
+
+                // // 커스텀 접근 거부 핸들러 설정
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
+
 
                 .build();
     }

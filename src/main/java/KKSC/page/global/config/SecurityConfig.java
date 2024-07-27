@@ -13,6 +13,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,12 +31,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
     private final MemberDetailsService memberDetailsService;
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler; //커스텀 접근 거부 핸들러
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -74,7 +78,6 @@ public class SecurityConfig {
                         anyRequest().authenticated())
 
 
-
                 // logout 설정
                 .logout(logout -> logout.
                         logoutSuccessUrl("/").
@@ -84,6 +87,12 @@ public class SecurityConfig {
                 .exceptionHandling(req -> req.authenticationEntryPoint(jwtAuthenticationEntryPoint()))
                 .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class)
+
+                // // 커스텀 접근 거부 핸들러 설정
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
+
 
                 .build();
     }

@@ -162,7 +162,7 @@ public class SecurityConfig {
 
     /*
      * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을
-     * 평가할 때 역할 계층을 반영
+     * 평가할 때 역할 계층을 반영한다.
      */
     @Bean
     public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {

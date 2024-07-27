@@ -4,6 +4,7 @@ import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.domain.member.service.impl.MemberDetailsService;
 import KKSC.page.global.auth.*;
 import KKSC.page.global.auth.service.JwtService;
+import KKSC.page.global.exception.CustomAccessDeniedHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

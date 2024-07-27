@@ -18,7 +18,7 @@ public record NoticeBoardDetailResponse(
         LocalDateTime modifiedAt,
         List<NoticeFileResponse> noticeFileResponses
 ) {
-    public static NoticeBoardDetailResponse fromEntity(NoticeBoard noticeBoard, List<NoticeFileResponse> noticeFileResponses) {
+    public static NoticeBoardDetailResponse from(NoticeBoard noticeBoard, List<NoticeFileResponse> noticeFileResponses) {
         return new NoticeBoardDetailResponse(
                 noticeBoard.getTitle(),
                 noticeBoard.getContent(),

@@ -1,9 +1,12 @@
 package KKSC.page.domain.member.entity;
 
+import KKSC.page.domain.calendar.entity.Event;
 import KKSC.page.domain.member.dto.request.MemberRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,6 +20,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
+
+    @OneToMany(mappedBy = "member")
+    private List<Event> events;
 
     @OneToOne
     @JoinColumn(name = "profile_id")

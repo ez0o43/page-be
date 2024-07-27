@@ -30,7 +30,6 @@ import java.util.List;
 @Slf4j
 public class NoticeFileServiceImpl implements NoticeFileService {
 
-    private final HttpServletResponse response;
     private final NoticeFileRepository noticeFileRepository;
     private final NoticeBoardRepository noticeBoardRepository;
     private final FileUtils fileUtils;
@@ -42,11 +41,12 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     /**
      * 공지사항 파일 업로드
      * @param noticeBoardId : 파일업로드 하고자 하는 공지사항 게시물의 번호
-     * @return 미정
+     * @param uploadRequestFile : 업로드하고자 하는 파일
+     * @return 업로드완료파일갯수 출력
      * @since 2024.07.06
      * @version 0.01
+     * @throws Exception
      * @throws IOException
-     * @throws IllegalStateException
      */
     @Override
     public String uploadFile(MultipartHttpServletRequest uploadRequestFile, Long noticeBoardId) throws Exception, IOException {
@@ -75,7 +75,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
                             || multipartFile.getOriginalFilename().isEmpty())) {
 
                         // 파일 업로드
-                        FileUploadResponse fileUploadResponse = fileUtils.uploadFile(multipartFile,FileCategory.NOTICE_FIlE);
+                        FileUploadResponse fileUploadResponse = fileUtils.uploadFile(multipartFile,FileCategory.NOTICE_FILE);
                         
                         // DB에 저장
                         NoticeFile noticeFile = NoticeFile.builder()
@@ -127,7 +127,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
     /**
      * 공지사항 파일 삭제
      * @param noticeFileId : 삭제 하고자 하는 파일의 번호
-     * @return 미정
+     * @return 파일삭제성공
      * @since 2024.07.06
      * @version 0.01
      */

@@ -24,6 +24,14 @@ public enum ErrorCode {
     NOT_FOUND_FILE(00, "파일을 찾을 수 없습니다."),
 
     /* 캘린더 */
+    NOT_FOUND_SCHEDULE(00, "일정을 찾을 수 없습니다.") ,
+    MAX_PARTICIPANTS(00, "최대 인원을 초과했습니다.") ,
+    SCHEDULE_OVERLAP(00, "이미 참여중인 일정입니다.") ,
+    NOT_FOUND_SCHEDULE_TITLE(00, "제목을 입력하세요.") ,
+    NOT_CHOSEN_DATE(00, "날짜를 선택하세요.") ,
+    NOT_CHOSEN_CATEGORY(00, "카테고리를 선택하세요.") ,
+    ACCESS_DENIED(00, "권한이 없습니다.") ,
+
 
     /* 공용 */
     NOT_FOUND_ACCESS_TOKEN(00, "토큰을 찾을 수 없습니다."),

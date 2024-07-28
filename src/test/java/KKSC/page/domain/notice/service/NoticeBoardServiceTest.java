@@ -70,6 +70,21 @@ class NoticeBoardServiceTest {
     }
 
     @Test
+    public void 게시글_수정시_예외() {
+        // Given
+        Long noExistId = 999L; // 존재하지 않는 ID
+        NoticeBoardRequest updateRequest = new NoticeBoardRequest("title-update", "content-update", 0L);
+
+        // when
+        NoticeBoardException exception = assertThrows(NoticeBoardException.class, () -> {
+            noticeBoardService.update(noExistId, updateRequest);
+        });
+
+        // Then
+        assertEquals(ErrorCode.NOT_FOUND_BOARD, exception.getErrorCode());
+    }
+
+    @Test
     public void 존재하지않는_게시글_수정() {
         //given
         Long noExistId = 101L; // 존재하지 않는 게시글

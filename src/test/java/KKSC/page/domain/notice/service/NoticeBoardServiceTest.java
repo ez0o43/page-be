@@ -183,7 +183,6 @@ class NoticeBoardServiceTest {
         //when
         Page<NoticeBoardListResponse> listResponsePage = noticeBoardService.searchBoardList(Keyword.TITLE, "제목", pageable);
         List<NoticeBoardListResponse> listResponses = listResponsePage.getContent();
-        System.out.println(listResponses);
 
         //then
         assertThat(listResponses.size()).isEqualTo(2); // 2개가 입력됬어도 title이 포함된 글은 1개
@@ -200,29 +199,38 @@ class NoticeBoardServiceTest {
 //        noticeBoardService.create(boardRequest1, "Kim");
 //        noticeBoardService.create(boardRequest2, "Kim");
 //        noticeBoardService.create(boardRequest3, "Kim");
-        PageRequest ascRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt"); // 최신순
-        PageRequest descRequest = PageRequest.of(0, 10, Sort.Direction.ASC, "createdAt");  // 오래된순
+        PageRequest descRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt"); // 최신순
+        PageRequest ascRequest = PageRequest.of(0, 10, Sort.Direction.ASC, "createdAt");   // 오래된순
+        PageRequest viewRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "view");      // 조회순
 
         //when
-        Page<NoticeBoardListResponse> ascList = noticeBoardService.getBoardList(ascRequest);
-        List<NoticeBoardListResponse> ascResponses = ascList.getContent();
-
         Page<NoticeBoardListResponse> descList = noticeBoardService.getBoardList(descRequest);
         List<NoticeBoardListResponse> descResponses = descList.getContent();
 
+        Page<NoticeBoardListResponse> ascList = noticeBoardService.getBoardList(ascRequest);
+        List<NoticeBoardListResponse> ascResponses = ascList.getContent();
+
+        Page<NoticeBoardListResponse> viewList = noticeBoardService.getBoardList(viewRequest);
+        List<NoticeBoardListResponse> viewResponses = viewList.getContent();
+
         //then
-        assertThat(ascList).isNotNull();
         assertThat(descList).isNotNull();
+        assertThat(ascList).isNotNull();
 
         /* 최신순 */
-        assertThat(ascResponses.get(0).title()).isEqualTo("title99");
-        assertThat(ascResponses.get(1).title()).isEqualTo("title98");
-        assertThat(ascResponses.get(2).title()).isEqualTo("title97");
+        assertThat(descResponses.get(0).title()).isEqualTo("title99");
+        assertThat(descResponses.get(1).title()).isEqualTo("title98");
+        assertThat(descResponses.get(2).title()).isEqualTo("title97");
 
         /* 오래된순 */
-        assertThat(descResponses.get(0).title()).isEqualTo("title0");
-        assertThat(descResponses.get(1).title()).isEqualTo("title1");
-        assertThat(descResponses.get(2).title()).isEqualTo("title2");
+        assertThat(ascResponses.get(0).title()).isEqualTo("title0");
+        assertThat(ascResponses.get(1).title()).isEqualTo("title1");
+        assertThat(ascResponses.get(2).title()).isEqualTo("title2");
+
+        /* 조회순 */
+        assertThat(viewResponses.get(0).title()).isEqualTo("title99");
+        assertThat(viewResponses.get(1).title()).isEqualTo("title98");
+        assertThat(viewResponses.get(2).title()).isEqualTo("title97");
     }
 
     @Test
@@ -242,9 +250,6 @@ class NoticeBoardServiceTest {
         List<NoticeBoardListResponse> ascTitle = noticeBoardService.searchBoardList(Keyword.TITLE, "제목", ascRequest).getContent();
         List<NoticeBoardListResponse> descContent = noticeBoardService.searchBoardList(Keyword.CONTENT, "내용", descRequest).getContent();
         List<NoticeBoardListResponse> ascCreatedBy = noticeBoardService.searchBoardList(Keyword.CREATED_BY, "a", ascRequest).getContent();
-        System.out.println(ascTitle);
-        System.out.println(descContent);
-        System.out.println(ascCreatedBy);
 
         //then
         assertThat(ascTitle).isNotNull();
@@ -268,21 +273,48 @@ class NoticeBoardServiceTest {
     }
 
     @Test
-    public void 키워드_조회순_조회() throws Exception {
+    void 키워드_조회순_조회() throws Exception {
         //given
+        NoticeBoard noticeBoard1 = NoticeBoard.builder().title("중요!!").content("내용1").delYN(0L).view(1L).build();
+        NoticeBoard noticeBoard2 = NoticeBoard.builder().title("중요한 공지입니다").content("내용2").delYN(0L).view(10L).build();
+        NoticeBoard noticeBoard3 = NoticeBoard.builder().title("7월 29일 공지").content("내용3").delYN(0L).view(15L).build();
+        noticeBoardRepository.save(noticeBoard1);
+        noticeBoardRepository.save(noticeBoard2);
+        noticeBoardRepository.save(noticeBoard3);
 
-        //when
+        PageRequest viewRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "view");
+
+        // when
+        Page<NoticeBoardListResponse> listResponse = noticeBoardService.searchBoardList(Keyword.TITLE, "공지", viewRequest);
+        List<NoticeBoardListResponse> boardList = listResponse.getContent();
 
         //then
+        assertNotNull(boardList);
+        assertEquals(2, boardList.size(), "공지가 포함된 게시글 수 : 2");
+        assertEquals(15L, boardList.get(0).view(),"공지가 포함된 첫번째 게시글의 조회수 : 15");
+
+        String[] expectedTitles = {"7월 29일 공지", "중요한 공지입니다"};
+        String[] actualTitles = new String[boardList.size()];
+        for (int i = 0; i < boardList.size(); i++) {
+            actualTitles[i] = boardList.get(i).title();
+        }
+        assertArrayEquals(expectedTitles, actualTitles);
     }
 
     // 조회수 증가 테스트코드 작성하기
     @Test
     void 조회수_증가_검증() throws Exception {
         //given
+        Long detailId = 10L;
 
         //when
+        noticeBoardService.countUpView(detailId);
+        noticeBoardService.countUpView(detailId);
+        noticeBoardService.countUpView(detailId);
 
         //then
+        NoticeBoard board = noticeBoardRepository.findById(detailId)
+                .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
+        assertEquals(3, board.getView(), "10번 게시글 조회수 : 3");
     }
 }

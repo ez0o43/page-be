@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -33,10 +32,6 @@ class NoticeBoardServiceTest {
     NoticeBoardRepository noticeBoardRepository;
     @Autowired
     MemberRepository memberRepository;
-
-//    @Qualifier("memberService")
-//    @Autowired
-//    private MemberService memberService;
 
     /* 게시물 생성 테스트 케이스 */
     @Test
@@ -51,7 +46,7 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.getBoardDetail(createdId); // 생성된 공지사항 조회
 
         //then
-        assertThat(board.title()).isEqualTo("title");
+        assertEquals("title", board.title());
     }
 
     /* 게시물 수정 테스트 케이스 */
@@ -66,12 +61,12 @@ class NoticeBoardServiceTest {
         NoticeBoardDetailResponse board = noticeBoardService.update(createdId, updateRequest); // 수정할 공지로 변경
 
         //then
-        assertThat(board.title()).isEqualTo("title-update");
-        assertThat(board.content()).isEqualTo("content-update");
-        assertThat(board.delYN()).isEqualTo(0L);
-        assertThat(board.createdAt()).isNotNull();
-        assertThat(board.createdBy()).isNotNull();
-        assertThat(board.modifiedAt()).isNotNull();
+        assertEquals("title-update", board.title());
+        assertEquals("content-update", board.content());
+        assertEquals(0L, board.delYN());
+        assertNotNull(board.createdAt());
+        assertNotNull(board.createdBy());
+        assertNotNull(board.modifiedAt());
     }
 
     @Test
@@ -102,7 +97,7 @@ class NoticeBoardServiceTest {
                 .orElseThrow(() -> new NoticeBoardException(ErrorCode.NOT_FOUND_BOARD));
 
         //then
-        assertThat(board.getDelYN()).isEqualTo(1L); // delYN: 0 -> 1
+        assertEquals(1L, board.getDelYN()); // delYN: 0 -> 1
     }
 
     @Test
@@ -155,18 +150,18 @@ class NoticeBoardServiceTest {
         Page<NoticeBoardListResponse> boardList3 = noticeBoardService.getBoardList(pageRequest3);
 
         //then
-        assertThat(boardList1.getNumber()).isEqualTo(0);            // 현재 페이지(page)
-        assertThat(boardList1.getNumberOfElements()).isEqualTo(10); // 페이지에 포함된 게시글 수 확인
-        assertThat(boardList1.getTotalElements()).isEqualTo(10);    // 총 게시글 수 확인
-        assertThat(boardList1.isFirst()).isTrue();                            // 현재 페이지 = 첫페이지
-
-        assertThat(boardList2.getNumber()).isEqualTo(1);            // 현재 페이지(page)
-        assertThat(boardList2.getNumberOfElements()).isEqualTo(10); // 페이지에 포함된 게시글 수 확인
-        assertThat(boardList2.getTotalElements()).isEqualTo(20);    // 총 게시글 수 확인 : 2페이지니까 총 20개
-
-        assertThat(boardList3.getNumber()).isEqualTo(0);            // 현재 페이지(page)
-        assertThat(boardList3.getNumberOfElements()).isEqualTo(20); // 페이지에 포함된 게시글 수 확인 : pageSize는 20이다.
-        assertThat(boardList3.getTotalElements()).isEqualTo(20);    // 총 게시글 수 확인
+        assertEquals(0, boardList1.getNumber());            // 현재 페이지(page)
+        assertEquals(10, boardList1.getNumberOfElements()); // 페이지에 포함된 게시글 수 확인
+        assertEquals(10, boardList1.getTotalElements());    // 총 게시글 수 확인
+        assertTrue(boardList1.isFirst());                   // 현재 페이지 = 첫페이지
+        //
+        assertEquals(1, boardList2.getNumber());            // 현재 페이지(page)
+        assertEquals(10, boardList2.getNumberOfElements()); // 페이지에 포함된 게시글 수 확인
+        assertEquals(20, boardList2.getTotalElements());    // 총 게시글 수 확인 : 2페이지니까 총 20개
+        //
+        assertEquals(0, boardList3.getNumber());            // 현재 페이지(page)
+        assertEquals(20, boardList3.getNumberOfElements()); // 페이지에 포함된 게시글 수 확인 : pageSize는 20이다.
+        assertEquals(20, boardList3.getTotalElements());    // 총 게시글 수 확인
     }
 
     @Test
@@ -185,9 +180,9 @@ class NoticeBoardServiceTest {
         List<NoticeBoardListResponse> listResponses = listResponsePage.getContent();
 
         //then
-        assertThat(listResponses.size()).isEqualTo(2); // 2개가 입력됬어도 title이 포함된 글은 1개
-        assertThat(listResponses.get(0).title()).isEqualTo("제목1"); // 검색 후 첫번째 게시글 제목
-        assertThat(listResponses.get(1).title()).isEqualTo("제목2"); // 검색 후 두번째 게시글 제목
+        assertEquals(2, listResponses.size()); // 3개가 입력됬어도 title이 포함된 글은 2개
+        assertEquals("제목1", listResponses.get(0).title()); // 검색 후 첫번째 게시글 제목
+        assertEquals("제목2", listResponses.get(1).title()); // 검색 후 두번째 게시글 제목
     }
 
     @Test
@@ -214,23 +209,23 @@ class NoticeBoardServiceTest {
         List<NoticeBoardListResponse> viewResponses = viewList.getContent();
 
         //then
-        assertThat(descList).isNotNull();
-        assertThat(ascList).isNotNull();
+        assertNotNull(descList);
+        assertNotNull(ascList);
 
         /* 최신순 */
-        assertThat(descResponses.get(0).title()).isEqualTo("title99");
-        assertThat(descResponses.get(1).title()).isEqualTo("title98");
-        assertThat(descResponses.get(2).title()).isEqualTo("title97");
+        assertEquals("title99", descResponses.get(0).title());
+        assertEquals("title98", descResponses.get(1).title());
+        assertEquals("title97", descResponses.get(2).title());
 
         /* 오래된순 */
-        assertThat(ascResponses.get(0).title()).isEqualTo("title0");
-        assertThat(ascResponses.get(1).title()).isEqualTo("title1");
-        assertThat(ascResponses.get(2).title()).isEqualTo("title2");
+        assertEquals("title0", ascResponses.get(0).title());
+        assertEquals("title1", ascResponses.get(1).title());
+        assertEquals("title2", ascResponses.get(2).title());
 
         /* 조회순 */
-        assertThat(viewResponses.get(0).title()).isEqualTo("title99");
-        assertThat(viewResponses.get(1).title()).isEqualTo("title98");
-        assertThat(viewResponses.get(2).title()).isEqualTo("title97");
+        assertEquals("title99", viewResponses.get(0).title());
+        assertEquals("title98", viewResponses.get(1).title());
+        assertEquals("title97", viewResponses.get(2).title());
     }
 
     @Test
@@ -252,24 +247,24 @@ class NoticeBoardServiceTest {
         List<NoticeBoardListResponse> ascCreatedBy = noticeBoardService.searchBoardList(Keyword.CREATED_BY, "a", ascRequest).getContent();
 
         //then
-        assertThat(ascTitle).isNotNull();
-        assertThat(descContent).isNotNull();
-        assertThat(ascCreatedBy).isNotNull();
+        assertNotNull(ascTitle);
+        assertNotNull(descContent);
+        assertNotNull(ascCreatedBy);
 
         /* 키워드_제목 + 최신순 */
-        assertThat(ascTitle.get(0).title()).isEqualTo("제목3");
-        assertThat(ascTitle.get(1).title()).isEqualTo("제목2");
-        assertThat(ascTitle.get(2).title()).isEqualTo("제목1");
+        assertEquals("제목3", ascTitle.get(0).title());
+        assertEquals("제목2", ascTitle.get(1).title());
+        assertEquals("제목1", ascTitle.get(2).title());
 
         /* 키워드_내용 + 오래된순 - NoticeBoardListResponse에 content 필드가 없는 관계로 일단 title로 테스트 */
-        assertThat(descContent.get(0).title()).isEqualTo("제목1");
-        assertThat(descContent.get(1).title()).isEqualTo("제목2");
-        assertThat(descContent.get(2).title()).isEqualTo("제목3");
+        assertEquals("제목1", descContent.get(0).title());
+        assertEquals("제목2", descContent.get(1).title());
+        assertEquals("제목3", descContent.get(2).title());
 
         /* 키워드_작성자 + 최신순 */
-        assertThat(ascCreatedBy.get(0).createdBy()).isEqualTo("abc");
-        assertThat(ascCreatedBy.get(1).createdBy()).isEqualTo("aab");
-        assertThat(ascCreatedBy.get(2).createdBy()).isEqualTo("aaa");
+        assertEquals("abc", ascCreatedBy.get(0).createdBy());
+        assertEquals("aab", ascCreatedBy.get(1).createdBy());
+        assertEquals("aaa", ascCreatedBy.get(2).createdBy());
     }
 
     @Test
@@ -284,14 +279,14 @@ class NoticeBoardServiceTest {
 
         PageRequest viewRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "view");
 
-        // when
+        //when
         Page<NoticeBoardListResponse> listResponse = noticeBoardService.searchBoardList(Keyword.TITLE, "공지", viewRequest);
         List<NoticeBoardListResponse> boardList = listResponse.getContent();
 
         //then
         assertNotNull(boardList);
         assertEquals(2, boardList.size(), "공지가 포함된 게시글 수 : 2");
-        assertEquals(15L, boardList.get(0).view(),"공지가 포함된 첫번째 게시글의 조회수 : 15");
+        assertEquals(15L, boardList.get(0).view(), "공지가 포함된 첫번째 게시글의 조회수 : 15");
 
         String[] expectedTitles = {"7월 29일 공지", "중요한 공지입니다"};
         String[] actualTitles = new String[boardList.size()];

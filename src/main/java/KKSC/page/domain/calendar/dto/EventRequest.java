@@ -1,8 +1,10 @@
 package KKSC.page.domain.calendar.dto;
 
 import KKSC.page.domain.calendar.entity.Category;
+import KKSC.page.domain.calendar.entity.Event;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public record EventRequest(
         String title,
@@ -12,7 +14,15 @@ public record EventRequest(
         LocalDateTime endDate,
         Long maxParticipant) {
 
-    public EventRequest toEntity() {
-        return new EventRequest(title, detail, category, startDate, endDate, maxParticipant);
+    public Event toEntity() {
+        return Event.builder()
+                .title(title)
+                .detail(detail)
+                .category(category)
+                .startDate(startDate)
+                .endDate(endDate)
+                .maxParticipant(maxParticipant)
+                .participants(new ArrayList<>())
+                .build();
     }
 }

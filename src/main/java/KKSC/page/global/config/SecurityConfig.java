@@ -44,6 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
                 // csrf 차단
                 .csrf(AbstractHttpConfigurer::disable)
@@ -154,6 +155,9 @@ public class SecurityConfig {
         return filter;
     }
 
+    /*
+    * 권한계층 생성
+    * */
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         // RoleHierarchyImpl의 fromHierarchy() static 메서드를 사용하여 역할 계층을 설정
@@ -161,14 +165,15 @@ public class SecurityConfig {
     }
 
     /*
-     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을
-     * 평가할 때 역할 계층을 반영한다.
+     *권한계층 등록
+     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을 평가할 때 역할 계층을 반영한다.
+     * 빈 이름 충돌이 있어 customWebSecurityExpressionHandler()로 수정 07.30
      */
-//    @Bean
-//    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-//        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-//        expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
-//        return expressionHandler;
-//    }
+    @Bean
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
+        return expressionHandler;
+    }
 
 }

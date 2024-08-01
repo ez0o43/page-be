@@ -15,26 +15,26 @@ public interface EventService {
     
     // 일정 목록 조회
     @PreAuthorize("hasRole('permission_level1 ')")
-    Long getScheduleList();
+    List<EventResponse> getScheduleList(Long year, Long month);
 
     // 일정 생성
     @PreAuthorize("hasRole('permission_level0 ')")
-    Long createSchedule();
+    Long createSchedule(EventRequest eventRequest);
 
     // 일정 삭제
     @PreAuthorize("hasRole('permission_level0 ')")
-    Long deleteSchedule();
+    void deleteSchedule(Long id);
 
     // 일정 수정
     @PreAuthorize("hasRole('permission_level0 ')")
-    Long updateSchedule();
+    EventResponse updateSchedule(Long id, EventRequest eventRequest);
 
     // 일정 참가
     @PreAuthorize("hasRole('permission_level1 ')")
-    Long joinSchedule();
+    Long joinSchedule(Long id, String name);
 
     // 일정 참가 취소
     @PreAuthorize("hasRole('permission_level1 ')")
-    Long cancelSchedule ();
+    void cancelSchedule (Long id);
 
 }

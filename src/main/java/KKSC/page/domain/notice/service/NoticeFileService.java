@@ -1,6 +1,7 @@
 package KKSC.page.domain.notice.service;
 
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface NoticeFileService {
@@ -11,6 +12,7 @@ public interface NoticeFileService {
 	 * @return 미정
 	 * @since 2024.07.06
 	 */
+	@PreAuthorize("hasRole('permission_level0 ')")
 	String uploadFile(MultipartHttpServletRequest uploadRequestFile, Long noticeBoardId) throws Exception;
 
 	/**
@@ -19,6 +21,7 @@ public interface NoticeFileService {
 	 * @return 미정
 	 * @since 2024.07.06
 	 */
+	@PreAuthorize("hasRole('permission_level0 ')")
 	Resource downloadFile(Long noticeFileId);
 
 	/**
@@ -27,6 +30,7 @@ public interface NoticeFileService {
 	 * @return 미정
 	 * @since 2024.07.06
 	 */
+	@PreAuthorize("hasRole('permission_level0 ')")
 	String deleteFile(Long noticeFileId);
 }
 

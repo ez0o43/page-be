@@ -1,7 +1,10 @@
 package KKSC.page.domain.calendar.repoAndService;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import KKSC.page.domain.calendar.dto.EventRequest;
 import KKSC.page.domain.calendar.dto.EventResponse;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,21 +14,27 @@ import java.util.List;
 public interface EventService {
     
     // 일정 목록 조회
-    List<EventResponse> getScheduleList(Long year, Long month);
+    @PreAuthorize("hasRole('permission_level1 ')")
+    Long getScheduleList();
 
     // 일정 생성
-    Long createSchedule(EventRequest eventRequest);
+    @PreAuthorize("hasRole('permission_level0 ')")
+    Long createSchedule();
 
     // 일정 삭제
-    void deleteSchedule(Long id);
+    @PreAuthorize("hasRole('permission_level0 ')")
+    Long deleteSchedule();
 
     // 일정 수정
-    EventResponse updateSchedule(Long id, EventRequest eventRequest);
+    @PreAuthorize("hasRole('permission_level0 ')")
+    Long updateSchedule();
 
     // 일정 참가
-    Long joinSchedule(Long id, String name);
+    @PreAuthorize("hasRole('permission_level1 ')")
+    Long joinSchedule();
 
     // 일정 참가 취소
-    void cancelSchedule(Long id);
+    @PreAuthorize("hasRole('permission_level1 ')")
+    Long cancelSchedule ();
 
 }

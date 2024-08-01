@@ -1,7 +1,13 @@
 package KKSC.page.domain.calendar.repoAndService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import KKSC.page.domain.calendar.dto.EventRequest;
+import KKSC.page.domain.calendar.dto.EventResponse;
+
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service

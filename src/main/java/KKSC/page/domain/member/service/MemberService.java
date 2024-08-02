@@ -3,6 +3,7 @@ package KKSC.page.domain.member.service;
 import KKSC.page.domain.member.dto.request.MemberLoginRequest;
 import KKSC.page.domain.member.dto.request.MemberRequest;
 import KKSC.page.domain.member.dto.response.MemberResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +25,6 @@ public interface MemberService {
     //프로필 조회
     MemberResponse getMemberProfile(String email);
 
+    //로그아웃
+    void logout(HttpServletRequest request);
 }

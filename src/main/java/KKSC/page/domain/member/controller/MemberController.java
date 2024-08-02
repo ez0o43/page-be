@@ -52,4 +52,11 @@ public class MemberController {
         MemberResponse response = memberService.getMemberProfile(email);
         return new ResponseVO<>(response);
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseVO<String> logout(HttpServletRequest request) {
+        memberService.logout(request);
+        return new ResponseVO<>("로그아웃 완료");
+    }
 }

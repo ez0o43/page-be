@@ -52,4 +52,14 @@ public class MemberController {
         MemberResponse response = memberService.getMemberProfile(email);
         return new ResponseVO<>(response);
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseVO<String> logout(HttpServletRequest request) {
+        String email = jwtService.extractUsername(request)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        jwtService.destroyRefreshToken(email);
+        return new ResponseVO<>("로그아웃 완료");
+    }
 }

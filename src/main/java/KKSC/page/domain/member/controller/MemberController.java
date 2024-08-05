@@ -8,6 +8,7 @@ import KKSC.page.domain.member.service.MemberService;
 import KKSC.page.global.auth.service.JwtService;
 import KKSC.page.global.exception.ErrorCode;
 import KKSC.page.global.exception.dto.ResponseVO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class MemberController {
     private final JwtService jwtService;
 
     // 회원가입
+    @Operation(summary = " 회원가입 ", description = " 회원가입 ")
     @PostMapping("/")
     public ResponseVO<String> register(@RequestBody @Valid MemberRequest request) {
         Long createdId = memberService.register(request);
@@ -34,6 +36,7 @@ public class MemberController {
     }
 
     // 회원탈퇴
+    @Operation(summary = " 회원탈퇴 ", description = " 회원탈퇴 ")
     @DeleteMapping("/")
     public ResponseVO<String> retire(@PathVariable String email) {
         memberService.retire(email);
@@ -41,6 +44,7 @@ public class MemberController {
     }
 
     // 회원정보 수정
+    @Operation(summary = " 회원정보 수정 ", description = " 회원정보 수정 ")
     @PutMapping("/")
     public ResponseVO<String> update(@RequestBody @Valid MemberRequest request) {
         memberService.update(request);
@@ -48,6 +52,7 @@ public class MemberController {
     }
 
     // 회원 프로필 조회
+    @Operation(summary = " 회원 프로필 조회 ", description = " 회원 프로필 조회 ")
     @GetMapping("/")
     public ResponseVO<MemberResponse> getMemberProfile(HttpServletRequest request) {
         String email = jwtService.extractUsername(request)

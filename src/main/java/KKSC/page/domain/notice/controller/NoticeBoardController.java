@@ -8,6 +8,7 @@ import KKSC.page.domain.notice.entity.NoticeBoard;
 import KKSC.page.domain.notice.repository.NoticeBoardRepository;
 import KKSC.page.domain.notice.service.NoticeBoardService;
 import KKSC.page.global.exception.dto.ResponseVO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class NoticeBoardController {
     private final NoticeBoardService noticeBoardService;
 
     // 게시글 작성
+    @Operation(summary = " 게시물 작성 ", description = " 게시물 작성 ")
     @PostMapping("/")
     public ResponseVO<Long> noticeCreate(@RequestBody @Valid NoticeBoardRequest request) {
         Long createdId = noticeBoardService.create(request, null);// memberName은 이후 로그인 구현 후 추가
@@ -35,6 +37,7 @@ public class NoticeBoardController {
     }
 
     // 게시글 수정
+    @Operation(summary = " 게시물 수정 ", description = " 게시물 수정 ")
     @PutMapping("/{id}")
     public ResponseVO<NoticeBoardDetailResponse> noticeUpdate(@PathVariable("id") Long id,@RequestBody @Valid NoticeBoardRequest request){
         NoticeBoardDetailResponse detailResponse = noticeBoardService.update(id, request);
@@ -43,6 +46,7 @@ public class NoticeBoardController {
     }
 
     // 게시글 삭제
+    @Operation(summary = " 게시물 삭제 ", description = " 게시물 삭제 ")
     @DeleteMapping("/{id}")
     public ResponseVO<String> noticeDelete(@PathVariable("id") Long id) {
         noticeBoardService.delete(id);
@@ -51,6 +55,7 @@ public class NoticeBoardController {
     }
 
     // 게시글 목록 조회(페이징)
+    @Operation(summary = " 게시글 목록 조회(페이징) ", description = " 게시물 목록 조회(페이징) ")
     @GetMapping("/list")
     public ResponseVO<Page<NoticeBoardListResponse>> noticeListPage(
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -60,6 +65,7 @@ public class NoticeBoardController {
 
     // 게시글 조회
     @GetMapping("/{id}")
+    @Operation(summary = " 게시물 조회 ", description = " 게시물 조회 ")
     public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
         NoticeBoardDetailResponse detailResponse = noticeBoardService.getBoardDetail(id);
 
@@ -67,6 +73,7 @@ public class NoticeBoardController {
     }
 
     // 특정 키워드로 검색
+    @Operation(summary = " 게시물 특정 키워드로 검색 ", description = " 게시물 특정 키워드로 검색 ")
     @GetMapping("/search")
     public ResponseVO<Page<NoticeBoardListResponse>> searchBoards(
             @RequestParam(defaultValue = "TITLE") Keyword keyword,

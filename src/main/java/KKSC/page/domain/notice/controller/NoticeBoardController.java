@@ -71,7 +71,6 @@ public class NoticeBoardController {
     // 게시글 단건 조회
     @GetMapping("/{id}")
     @Operation(summary = " 게시물 조회 ", description = " 게시물 조회 ")
-    public ResponseVO<NoticeBoardDetailResponse> notice(@PathVariable("id") Long id) {
     public ResponseVO<NoticeBoardDetailResponse> noticeDetail(@PathVariable("id") Long id,
                                                               HttpServletRequest request, HttpServletResponse response) {
         // 현재 로그인한 사용자 정보 가져오기

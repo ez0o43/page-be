@@ -9,6 +9,7 @@ import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.domain.member.service.MemberService;
 import KKSC.page.global.auth.service.JwtService;
 import KKSC.page.global.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,5 +75,13 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByEmail(email).orElseThrow();
 
         return MemberResponse.from(member);
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        String email = jwtService.extractUsername(request)
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+
+        jwtService.destroyRefreshToken(email);
     }
 }

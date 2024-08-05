@@ -4,6 +4,7 @@ import KKSC.page.domain.member.repository.MemberRepository;
 import KKSC.page.domain.member.service.impl.MemberDetailsService;
 import KKSC.page.global.auth.*;
 import KKSC.page.global.auth.service.JwtService;
+import KKSC.page.global.exception.CustomAccessDeniedHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,15 +32,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
     private final MemberDetailsService memberDetailsService;
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler; //커스텀 접근 거부 핸들러
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
                 // csrf 차단
                 .csrf(AbstractHttpConfigurer::disable)
@@ -74,7 +80,6 @@ public class SecurityConfig {
                         anyRequest().authenticated())
 
 
-
                 // logout 설정
                 .logout(logout -> logout.
                         logoutSuccessUrl("/").
@@ -84,6 +89,12 @@ public class SecurityConfig {
                 .exceptionHandling(req -> req.authenticationEntryPoint(jwtAuthenticationEntryPoint()))
                 .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class)
+
+                // // 커스텀 접근 거부 핸들러 설정
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
+
 
                 .build();
     }
@@ -144,6 +155,9 @@ public class SecurityConfig {
         return filter;
     }
 
+    /*
+    * 권한계층 생성
+    * */
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
         // RoleHierarchyImpl의 fromHierarchy() static 메서드를 사용하여 역할 계층을 설정
@@ -151,11 +165,12 @@ public class SecurityConfig {
     }
 
     /*
-     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을
-     * 평가할 때 역할 계층을 반영
+     *권한계층 등록
+     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을 평가할 때 역할 계층을 반영한다.
+     * 빈 이름 충돌이 있어 customWebSecurityExpressionHandler()로 수정 07.30
      */
     @Bean
-    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
         return expressionHandler;

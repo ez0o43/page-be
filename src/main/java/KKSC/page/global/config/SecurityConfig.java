@@ -82,6 +82,7 @@ public class SecurityConfig {
 
                 // logout 설정
                 .logout(logout -> logout.
+                        logoutUrl("/member/logout").
                         logoutSuccessUrl("/").
                         invalidateHttpSession(true))
 

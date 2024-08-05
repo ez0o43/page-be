@@ -161,17 +161,18 @@ public class SecurityConfig {
     * */
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
-        // RoleHierarchyImpl의 fromHierarchy() static 메서드를 사용하여 역할 계층을 설정
-        return RoleHierarchyImpl.fromHierarchy("permission_level0 > permission_level1 > permission_level2");
+        return RoleHierarchyImpl.fromHierarchy("""
+            ROLE_permission_level0 > ROLE_permission_level1
+            ROLE_permission_level1> ROLE_permission_level2
+            """);
     }
 
+
     /*
-     *권한계층 등록
-     * 이 설정은 Spring Security에서 보안 표현식(예: hasRole, hasAuthority)을 평가할 때 역할 계층을 반영한다.
-     * 빈 이름 충돌이 있어 customWebSecurityExpressionHandler()로 수정 07.30
-     */
+    * 권한 계층 등록
+    * */
     @Bean
-    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() { //빈 이름 충돌이 있어 customWebSecurityExpressionHandler()로 수정 07.30
         DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy()); //앞에서 설정한 권한 계층 설정
         return expressionHandler;

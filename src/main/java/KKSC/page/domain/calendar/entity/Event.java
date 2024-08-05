@@ -22,6 +22,7 @@ public class Event extends BaseTimeEntity {
     @Column(name = "event_id")
     private Long id;
 
+    // 일정 제목
     @OneToMany(mappedBy = "event")
     private List<Participant> participants;
 
@@ -31,14 +32,38 @@ public class Event extends BaseTimeEntity {
 
     private String title;
 
+    // 일정 카테고리(분류)
     @Enumerated(value = EnumType.STRING)
     private Category category;
 
+    // 참가자 리스트
+    @OneToMany(mappedBy = "participants")
+    private List<Participant> participants;
+
+    // 참가 인원
+    private Long numberPeople;
+
+    // 참가 인원 추가
+    private void addPerson(){
+        numberPeople++;
+    }
     private Long maxParticipant;
 
+    // 일정 시작 날짜
     private LocalDateTime startDate;
+
+    // 일정 종료 날짜
     private LocalDateTime endDate;
+
+    // 일정 세부사항
     private String detail;
+
+    // 일정 수정(시작 날짜, 종료 날짜, 세부 사항 수정)
+    /*private void update(CalendarRequest calendarrequest){
+        this.startDate = calendarrequest.startDate();
+        this.endDate = calendarrequest.endDate();
+        this.detail = calendarrequest.detail();
+    } */
 
     public void update(String title, String detail, Category category, LocalDateTime startDate, LocalDateTime endDate, Long maxParticipant) {
         this.title = title;
